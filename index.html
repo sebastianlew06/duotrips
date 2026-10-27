@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Duolingo Trips concept prototype: an etiquette-first Culture Quest for Japan and Korea. Not an official Duolingo product.">
+<meta name="theme-color" content="#58CC02">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trips">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<title>Trips Concept Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+JP:wght@500;700&family=Noto+Sans+KR:wght@500;700&display=swap">
+<style>
+/* Layout: desktop = phone frame + guide panel; phone = the app full screen. Duolingo-style path, lesson sheets and Duo guide; the Culture Quest is the hero flow. */
+:root{
+  --bg:#F4F7F2; --panel:#FFFFFF; --fg:#2B2F33; --muted:#6B7378; --line:#E3E8E5;
+  --green:#58CC02; --green-d:#46A302; --green-ink:#3A8A00; --green-soft:#D7FFB8;
+  --blue:#1CB0F6; --blue-d:#1899D6; --orange:#FF9600; --red:#E5484D; --red-d:#B83236; --red-soft:#FFDFE0;
+  --yellow:#FFC800; --yellow-d:#E0A800; --purple:#9C6ADE; --purple-d:#7B4FC0; --card:#FFFFFF; --soft:#F1F5EF; --phone:#1E2326; --free:#6B7378;
+  --gold-ink:#8F6400; --orange-ink:#B05A00; --blue-ink:#0A70A8; --banner:#1E2326; --node-off:#E3E8E5;
+  --sev1:#7A5A00; --sev2:#A35400; --sev3:#C02D33; --tone-casual:#A35400; --tone-local:#6A3FB0;
+  --display:'Nunito','Arial Rounded MT Bold',system-ui,sans-serif; --cjk:'Noto Sans JP','Noto Sans KR','Hiragino Sans','Apple SD Gothic Neo',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12171A;--panel:#1A2125;--fg:#ECF0EE;--muted:#9AA5A9;--line:#2C363B;--card:#1F272B;--soft:#232D31;--phone:#000;--green-ink:#7BDB2E;--green-soft:#22361A;--red-soft:#3A2224;--free:#56636A;--gold-ink:#FFD24A;--orange-ink:#FFB25C;--blue-ink:#5CC8FF;--banner:#2A3439;--node-off:#46535A;--sev1:#FFD24A;--sev2:#FFB25C;--sev3:#FF8A8E;--tone-casual:#FFB25C;--tone-local:#C9A7F5;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171A;--panel:#1A2125;--fg:#ECF0EE;--muted:#9AA5A9;--line:#2C363B;--card:#1F272B;--soft:#232D31;--phone:#000;--green-ink:#7BDB2E;--green-soft:#22361A;--red-soft:#3A2224;--free:#56636A;--gold-ink:#FFD24A;--orange-ink:#FFB25C;--blue-ink:#5CC8FF;--banner:#2A3439;--node-off:#46535A;--sev1:#FFD24A;--sev2:#FFB25C;--sev3:#FF8A8E;--tone-casual:#FFB25C;--tone-local:#C9A7F5;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{display:flex;gap:48px;justify-content:center;align-items:flex-start;padding-block:28px;max-width:1100px;margin:0 auto}
+.guide{max-width:370px;min-width:0;padding-top:24px}
+.guide h1{font-size:34px;font-weight:900;line-height:1.1;text-wrap:balance;margin:8px 0 10px}
+.guide p{color:var(--muted);font-size:16px;line-height:1.5;margin:0 0 14px}
+.guide ol{padding-left:20px;margin:0 0 16px;line-height:1.65;font-weight:700}
+.guide h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin:18px 0 8px}
+.guide ul{padding-left:18px;margin:0 0 14px;line-height:1.5;color:var(--muted);font-weight:600;font-size:14px}
+.guide .note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green-ink)}
+.wordmark{font-weight:900;font-size:22px;letter-spacing:-.02em;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+.wordmark span{color:var(--blue);font-weight:800}
+.phone{width:390px;max-width:100%;height:820px;background:var(--phone);border-radius:48px;padding:12px;flex:none;box-shadow:0 30px 60px rgba(0,0,0,.18)}
+.screen{background:var(--panel);border-radius:38px;height:100%;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.concept{background:var(--soft);color:var(--muted);font-size:11px;font-weight:700;text-align:center;padding:7px 14px;letter-spacing:.02em}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 18px 8px;border-bottom:2px solid var(--line)}
+.chips{display:flex;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:3px;font-weight:900;font-size:14px;font-variant-numeric:tabular-nums}
+.flame{color:var(--orange)} .gem{color:var(--blue)} .heart{color:var(--red)}
+.view > *{flex-shrink:0}
+.view{flex:1;overflow-y:auto;padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.nav{display:flex;border-top:2px solid var(--line);padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.nav button{flex:1;background:none;border:2px solid transparent;border-radius:14px;padding:6px 0;font:800 13px var(--display);color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button .ic{font-size:20px;line-height:1}
+.nav button[aria-current="true"]{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,transparent);background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.lessonmode .top,.lessonmode .nav{display:none}
+@media (max-width:820px){
+  .wrap{height:100%}
+  .view{min-height:0}
+  .guide{display:none}.wrap{padding-block:0}
+  body{padding-left:0;padding-right:0}
+  .phone{width:100%;height:100%;min-height:600px;padding:0;border-radius:0;background:transparent;box-shadow:none}
+  .screen{border-radius:0}
+  .view,.top{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .nav{padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+}
+h2{font-size:23px;font-weight:900;margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);font-weight:700;font-size:15px;margin:0;line-height:1.4}
+.small{font-size:13px;color:var(--muted);font-weight:700;margin:0;line-height:1.4}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:14px;font:900 16px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-d);cursor:pointer;text-align:center;text-decoration:none;box-sizing:border-box}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+.btn:disabled{background:var(--line);box-shadow:0 4px 0 color-mix(in srgb,var(--line) 70%,#000);color:var(--muted);cursor:not-allowed}
+.btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d)}
+.btn.purple{background:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.ghost{background:var(--card);color:var(--blue);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px}
+.row{display:flex;gap:10px;align-items:center}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:10px 12px;font:800 15px var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.pill[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);box-shadow:0 3px 0 var(--blue-d);background:color-mix(in srgb,var(--blue) 8%,var(--card))}
+.scroller{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px;scrollbar-width:none}
+.scroller .pill{white-space:nowrap;flex:none;font-size:14px;padding:8px 12px}
+/* Date roller: three snap-scrolling wheels; the middle row is the selection. */
+.wheel{position:relative;display:flex;gap:4px;height:180px;margin-top:10px;border-radius:16px;background:var(--soft);overflow:hidden}
+.wheel::before{content:"";position:absolute;left:8px;right:8px;top:72px;height:36px;border-radius:10px;background:var(--card);border:2px solid color-mix(in srgb,var(--blue) 45%,var(--line));box-sizing:border-box;pointer-events:none}
+.col{position:relative;flex:1;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding:72px 0;box-sizing:border-box;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);outline:none}
+.col::-webkit-scrollbar{display:none}
+.col:focus-visible{box-shadow:inset 0 0 0 3px var(--blue);border-radius:12px}
+.col div{height:36px;line-height:36px;text-align:center;scroll-snap-align:center;font:800 17px var(--display);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums;user-select:none}
+.col div.on{color:var(--fg);font-size:19px;font-weight:900}
+.col div.off{opacity:.3}
+.wheel-labels{display:flex;gap:4px;margin-top:8px}
+.wheel-labels span{flex:1;text-align:center;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lvl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.lvl .pill{text-align:left;display:flex;flex-direction:column;gap:2px}
+.lvl .pill small{font-weight:700;font-size:12px;color:var(--muted)}
+.count{display:flex;align-items:baseline;gap:8px}
+.count b{font-size:52px;font-weight:900;color:var(--green);line-height:1;font-variant-numeric:tabular-nums}
+
+/* Progress bars: Duolingo-style with a highlight; width animates from its last value. */
+.bar{height:16px;background:var(--line);border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:10px;position:relative;transition:width .6s cubic-bezier(.3,1.4,.6,1);min-width:0}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:3px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+
+/* Duo */
+.duo-say{display:flex;gap:10px;align-items:flex-end}
+.duo-say svg{flex:none}
+.bubble{position:relative;border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:15px;line-height:1.35;background:var(--card);min-width:0}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:14px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.duo-bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+
+/* Unit banner and path */
+.unit{background:var(--green);color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 4px 0 var(--green-d)}
+.unit small{display:block;font-weight:900;font-size:13px;letter-spacing:.06em;opacity:.9;text-transform:uppercase}
+.unit b{font-size:19px;font-weight:900;line-height:1.2}
+.unit .book{font-size:24px;border-left:2px solid rgba(255,255,255,.35);padding-left:12px}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0}
+.stop{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.node{width:66px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#fff;background:var(--line);box-shadow:0 6px 0 color-mix(in srgb,var(--line) 65%,#000);border:0;cursor:pointer}
+.node.now{background:var(--green);box-shadow:0 6px 0 var(--green-d)}
+.node.done{background:var(--yellow);box-shadow:0 6px 0 var(--yellow-d)}
+.node.trophy{background:var(--purple);box-shadow:0 6px 0 var(--purple-d);width:78px;height:70px;font-size:32px}
+.node.trophy.done{background:var(--yellow);box-shadow:0 6px 0 var(--yellow-d)}
+.startflag{position:absolute;top:-30px;background:var(--card);color:var(--green-ink);border:2px solid var(--line);border-radius:10px;padding:2px 8px;font-weight:900;font-size:12px;letter-spacing:.06em;animation:bob 1.6s ease-in-out infinite}
+/* Once the START flag moves past the first stop, give it room so it does not sit on the previous label. */
+.stop:not(:first-child):has(.startflag){margin-top:32px}
+.lbl{font-weight:800;font-size:12.5px;color:var(--muted);text-align:center;max-width:150px;line-height:1.25}
+.lbl em{display:block;font-style:normal;color:var(--green-ink);font-size:11.5px}
+
+/* Lesson screens */
+.lhead{display:flex;align-items:center;gap:12px}
+.lhead .bar{flex:1}
+.xbtn{border:0;background:none;color:var(--muted);font:900 26px/1 var(--display);cursor:pointer;padding:0 4px}
+.tagline{display:inline-flex;align-items:center;gap:6px;font-weight:900;font-size:13px;color:var(--purple);letter-spacing:.06em;text-transform:uppercase}
+.scene{border-radius:20px;padding:14px;display:flex;gap:14px;align-items:center;background:color-mix(in srgb,var(--blue) 9%,var(--card));border:2px solid color-mix(in srgb,var(--blue) 22%,var(--line))}
+.scene .em{font-size:40px;line-height:1;flex:none}
+.scene .place{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-d)}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:16px;padding:12px 14px;font:800 16px/1.35 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 4px 0 var(--line)}
+.opt:disabled{cursor:default}
+.opt.sel{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--card));box-shadow:0 4px 0 var(--blue-d);color:var(--blue-d)}
+.opt.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 12%,var(--card));box-shadow:0 4px 0 var(--green-d)}
+.opt.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,var(--card));box-shadow:0 4px 0 var(--red-d)}
+.opt.dim{opacity:.5}
+.reaction{display:flex;gap:12px;align-items:flex-start;border-radius:18px;padding:12px 14px;border:2px solid var(--line);background:var(--card)}
+.face{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:30px;flex:none;background:var(--soft)}
+.reaction.ok .face{animation:hop .5s ease}
+.reaction.no .face{animation:shake .45s ease}
+@keyframes hop{30%{transform:translateY(-10px) scale(1.08)}60%{transform:translateY(0)}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.reaction b{font-size:13px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.reaction p{margin:2px 0 0;font-weight:700;font-size:15px;line-height:1.45}
+.why{background:var(--soft);border-radius:16px;padding:12px 14px}
+.why b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple)}
+.why p{margin:4px 0 0;font-weight:600;font-size:14px;line-height:1.5}
+.src{display:block;margin-top:6px;font-size:12px;color:var(--muted);font-weight:700}
+.sev{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.sev i{font-style:normal;letter-spacing:1px}
+.sev.s1{background:color-mix(in srgb,var(--yellow) 26%,var(--card));color:#8A6A00}
+.sev.s2{background:color-mix(in srgb,var(--orange) 22%,var(--card));color:#B25F00}
+.sev.s3{background:color-mix(in srgb,var(--red) 18%,var(--card));color:var(--red)}
+.sheet{position:sticky;bottom:-18px;margin:auto -18px -18px;padding:14px 18px calc(18px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:2px solid var(--line);display:flex;flex-direction:column;gap:10px;z-index:2}
+.sheet.ok{background:var(--green-soft);border-top-color:transparent}
+.sheet.no{background:var(--red-soft);border-top-color:transparent}
+.sheet h3{margin:0;font-size:21px;font-weight:900;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sheet.ok h3{color:var(--green-ink)} .sheet.no h3{color:var(--red)}
+.sheet .avoided{margin:-4px 0 0;gap:6px;font-weight:800;font-size:15px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{border-radius:16px;border:2px solid;overflow:hidden;text-align:center}
+.tile small{display:block;color:#fff;font-weight:900;font-size:11.5px;letter-spacing:.06em;padding:5px 2px;text-transform:uppercase}
+.tile b{display:block;padding:10px 4px;font-size:22px;font-weight:900;background:var(--card);font-variant-numeric:tabular-nums}
+.t1{border-color:var(--yellow)} .t1 small{background:var(--yellow)} .t1 b{color:var(--yellow-d)}
+.t2{border-color:var(--green)} .t2 small{background:var(--green)} .t2 b{color:var(--green-ink)}
+.t3{border-color:var(--blue)} .t3 small{background:var(--blue)} .t3 b{color:var(--blue-d)}
+.mlist{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.mitem{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.mitem span:first-child{min-width:0}
+.hyper{border-color:color-mix(in srgb,var(--purple) 45%,var(--line));background:color-mix(in srgb,var(--purple) 8%,var(--card))}
+
+/* Badge and share */
+.badge{border-radius:24px;padding:20px 18px;text-align:center;background:linear-gradient(165deg,var(--green),#2F8F00);color:#fff;display:flex;flex-direction:column;gap:6px;align-items:center}
+.badge b{display:block;font-size:28px;font-weight:900;line-height:1.1}
+.scorebox{display:flex;gap:10px;margin-top:8px;width:100%}
+.scorebox div{flex:1;background:rgba(255,255,255,.18);border-radius:14px;padding:8px 6px}
+.scorebox strong{display:block;font-size:23px;font-weight:900;font-variant-numeric:tabular-nums}
+.scorebox span{font-size:12px;font-weight:800}
+.share img{width:100%;border-radius:16px;border:2px solid var(--line);display:block}
+.socials{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.soc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--fg);text-decoration:none;font-weight:800;font-size:12px;box-shadow:0 3px 0 var(--line)}
+.soc i{font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px}
+.copybox{width:100%;box-sizing:border-box;border:2px solid var(--line);border-radius:14px;padding:10px 12px;font:600 16px/1.4 var(--display);background:var(--soft);color:var(--fg);resize:none}
+
+/* Set Off and others */
+.cjk{font-family:var(--cjk);font-weight:700}
+.rom{color:var(--muted);font-weight:700}
+.play{border:0;background:var(--blue);color:#fff;border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer;flex:none;box-shadow:0 3px 0 var(--blue-d)}
+.offline{background:var(--phone);color:#fff;border-radius:14px;padding:10px 12px;font-weight:800;font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 8px}
+.offline span{white-space:nowrap}
+.offline span:last-child{font-size:12px;opacity:.8}
+.sos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.sos div:last-child{grid-column:1/-1}
+.sos div{background:var(--soft);border-radius:12px;padding:8px;text-align:center}
+.sos b{display:block;font-size:22px;font-weight:900;color:var(--red);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sos span{font-size:12px;font-weight:800;color:var(--muted)}
+.region{border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--purple) 9%,var(--card));border:2px solid color-mix(in srgb,var(--purple) 25%,var(--line))}
+.region b{font-size:17px}
+.search{border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:700 16px var(--display);width:100%;background:var(--card);color:var(--fg);box-sizing:border-box}
+.tone{font-size:11px;font-weight:900;border-radius:6px;padding:2px 6px;white-space:nowrap;letter-spacing:.03em}
+.tone.polite{background:color-mix(in srgb,var(--green) 16%,var(--card));color:var(--green-ink)}
+.tone.casual{background:color-mix(in srgb,var(--orange) 18%,var(--card));color:#B25F00}
+.tone.local{background:color-mix(in srgb,var(--purple) 16%,var(--card));color:var(--purple-d)}
+.post{display:flex;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:900;color:#fff}
+.post p{margin:2px 0 0;line-height:1.4;font-size:15px}
+.host{font-size:11px;font-weight:900;color:var(--green-ink);background:color-mix(in srgb,var(--green) 14%,var(--card));border-radius:6px;padding:2px 6px;margin-left:6px}
+.wrapped{background:linear-gradient(170deg,var(--green),#2F8F00);color:#fff;border-radius:24px;padding:20px}
+.wrapped .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.wrapped .grid div{background:rgba(255,255,255,.16);border-radius:14px;padding:10px}
+.wrapped .grid b{display:block;font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
+/* Free / Trip Pass / Super layer */
+.mode{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px 0;font-size:12px;font-weight:800;color:var(--muted)}
+.mode button{border:2px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:4px 12px;font:800 12px var(--display);cursor:pointer}
+.mode button[aria-pressed="true"]{border-color:var(--purple);color:#fff;background:var(--purple)}
+.mode button.freeb[aria-pressed="true"]{border-color:var(--free);background:var(--free)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.t{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.06em;border-radius:6px;padding:2px 6px;vertical-align:middle;white-space:nowrap}
+.t.free{background:color-mix(in srgb,var(--free) 16%,var(--card));color:var(--free)}
+.t.pass{background:var(--purple);color:#fff}
+.t.super{background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{text-align:left;border:2px solid var(--line);background:var(--card);border-radius:16px;padding:10px 12px;font:800 14px/1.25 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.feat .ic{font-size:22px}
+.feat.locked{background:var(--soft);color:var(--muted)}
+.feat .lk{position:absolute;top:10px;right:10px;color:var(--muted)}
+.feat{position:relative}
+.lockcard{border:2px dashed var(--purple);background:color-mix(in srgb,var(--purple) 7%,var(--card));border-radius:18px;padding:12px 14px}
+.lockcard b{color:var(--purple)}
+.meter{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:13px}
+.dots{display:flex;gap:4px}.dots i{width:13px;height:13px;border-radius:50%;background:var(--green)}.dots i.used{background:var(--line)}
+.reg{display:flex;gap:6px;margin-top:8px}
+.reg button{flex:1;border:2px solid var(--line);background:var(--card);border-radius:10px;padding:5px;font:800 12px var(--display);color:var(--muted);cursor:pointer}
+.reg button[aria-pressed="true"]{border-color:var(--green);color:var(--green-ink)}
+.lily{width:104px;height:104px;border-radius:50%;margin:4px auto;display:grid;place-items:center;background:var(--purple);color:#fff;font-size:40px;font-weight:900}
+.wave{display:flex;gap:4px;justify-content:center;align-items:center;height:30px}
+.wave i{width:5px;border-radius:3px;background:var(--blue)}
+.mic{width:92px;height:92px;border-radius:50%;margin:6px auto;display:grid;place-items:center;background:var(--blue);box-shadow:0 7px 0 var(--blue-d);color:#fff;font-size:36px;border:0;cursor:pointer}
+.mic.listen{animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.fb{border-radius:16px;padding:11px 14px;font-weight:800}
+.fb.ok{background:color-mix(in srgb,var(--green) 16%,var(--card));color:var(--green-ink)}
+.fb p{margin:4px 0 0;color:var(--fg);font-weight:600;font-size:14px;line-height:1.45}
+.tier{display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;gap:10px}
+.tier[aria-pressed="true"]{border-color:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.price{font-size:21px;font-weight:900;white-space:nowrap}
+.superc{border-radius:20px;padding:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--blue) 16%,var(--card)),color-mix(in srgb,var(--purple) 18%,var(--card)));border:2px solid color-mix(in srgb,var(--purple) 40%,var(--line))}
+.strike{text-decoration:line-through;color:var(--muted);font-weight:700}
+.keep{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;font-size:13px;font-weight:700;align-items:center;margin-top:8px}
+.toast{position:absolute;left:18px;right:18px;bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--panel);border-radius:14px;padding:12px 14px;font-weight:800;text-align:center;z-index:5;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+
+/* iPhone frame (desktop only): titanium edge, side buttons, Dynamic Island, status bar, home indicator. */
+.phone{position:relative;width:393px;max-width:100%;height:852px;border-radius:62px;padding:12px;background:#0B0C0E;flex:none;box-shadow:0 0 0 2px #8A8D92,0 0 0 5px #3A3C40,0 0 0 6px #1E1F22,0 40px 80px rgba(0,0,0,.28);box-sizing:border-box}
+.screen{border-radius:50px}
+.hw{position:absolute;width:5px;background:linear-gradient(90deg,#55585D,#2E3034);border-radius:3px}
+.hw-action{left:-9px;top:128px;height:32px}.hw-vol1{left:-9px;top:186px;height:60px}.hw-vol2{left:-9px;top:258px;height:60px}.hw-power{right:-9px;top:220px;height:96px;background:linear-gradient(270deg,#55585D,#2E3034)}
+.island{position:absolute;top:23px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000;z-index:20}
+.status{display:flex;justify-content:space-between;align-items:center;padding:16px 30px 6px 40px;font:700 16px -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;color:var(--fg);background:var(--panel);min-height:24px}
+.status .plane{color:var(--orange);display:inline-flex}
+.homebar{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--fg);opacity:.85;z-index:6}
+.phone .nav{padding-bottom:22px}
+.lessonmode .status{background:var(--panel)}
+.ico{display:inline-block;vertical-align:middle;flex:none}
+.ico.fill{fill:currentColor}
+.flag{display:inline-block;vertical-align:-3px;border-radius:3px;flex:none}
+.chip{gap:4px}
+.nav button .ic{height:24px;display:grid;place-items:center}
+.emo{display:inline-block;line-height:1;vertical-align:middle;flex:none}
+.node{color:#fff}.node:not(.now):not(.done):not(.trophy){color:var(--muted)}
+.unit .book{display:grid;place-items:center}
+.feat .ic{color:var(--blue)}.feat.locked .ic{color:var(--muted)}
+.tile b{display:flex;align-items:center;justify-content:center;gap:4px}
+.t1 b .ico{color:var(--yellow-d)}
+.offline span:first-child{display:inline-flex;align-items:center;gap:6px}
+.play{display:grid;place-items:center}
+.regions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.regbtn{position:relative;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:14px;padding:9px 26px 9px 11px;font:800 14px/1.2 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;gap:3px;min-width:0}
+.regbtn:first-child{grid-column:1/-1}
+.regbtn small{font-weight:700;font-size:12px;color:var(--muted)}
+.regbtn .lk{position:absolute;top:9px;right:8px;color:var(--muted)}
+.regbtn[aria-pressed="true"]{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 9%,var(--card));box-shadow:0 3px 0 var(--blue-d)}
+.regbtn[aria-pressed="true"] b{color:var(--blue-d)}
+.regbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.callhead{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:18px;padding:10px 12px}
+.callhead .lily{width:48px;height:48px;font-size:22px;margin:0;flex:none}
+.callhead b{display:block;font-size:16px}
+.callhead .wave{margin-left:auto;height:24px}
+.chat{display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.msg.from-you{align-self:flex-end;flex-direction:row-reverse}
+.lav{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center;flex:none}
+.mb{border-radius:16px;padding:8px 12px;display:flex;flex-direction:column;gap:1px;background:color-mix(in srgb,var(--purple) 10%,var(--card));border:2px solid color-mix(in srgb,var(--purple) 25%,var(--line));min-width:0}
+.msg.from-you .mb{background:color-mix(in srgb,var(--blue) 12%,var(--card));border-color:color-mix(in srgb,var(--blue) 30%,var(--line))}
+.mb .cjk{font-size:16px}.mb .rom{font-size:12.5px}.mb .en{font-size:12.5px;color:var(--muted);font-weight:600}
+.fb.no{background:color-mix(in srgb,var(--red) 12%,var(--card));color:var(--red)}
+.mic{color:#fff}
+@media (max-width:820px){.hw,.island,.status,.homebar{display:none}.phone{width:100%;height:100%;min-height:600px;border-radius:0;padding:0;box-shadow:none;background:transparent}.screen{border-radius:0}.phone .nav{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}}
+
+/* Welcome hero: full-bleed scene that crossfades between airport, Japan and Korea. */
+.hero{position:relative;height:260px;margin:-14px -18px 0;overflow:hidden;flex:none}
+.hero-bg{position:absolute;inset:0;opacity:0;transition:opacity .7s ease}
+.hero-bg.on{opacity:1}
+.hero-bg svg{width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,var(--panel));pointer-events:none;z-index:1}
+.hero-duo{position:absolute;left:14px;bottom:6px;z-index:2;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12))}
+.hero-duo.swap{animation:pop .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.55) translateY(24px)}100%{transform:none}}
+.hero-say{position:absolute;left:132px;right:14px;bottom:30px;z-index:3;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:15px;line-height:1.35;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.hero-say::before{content:"";position:absolute;left:-9px;bottom:16px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+@media (max-width:820px){.hero{margin-left:calc(-1 * max(18px, env(safe-area-inset-left, 0px)));margin-right:calc(-1 * max(18px, env(safe-area-inset-right, 0px)))}}
+@media (prefers-reduced-motion:reduce){.hero-bg{transition:none}.hero-duo.swap{animation:none}}
+
+/* Cosmetic polish: readable text colours (WCAG AA), dark-mode tokens, larger tap areas, Duo halo. */
+.flame{color:var(--orange-ink)} .gem{color:var(--blue-ink)}
+.btn.ghost{color:var(--blue-ink)}
+.t1 small{color:#4A3600} .t1 b,.t1 b .ico{color:var(--gold-ink)}
+.t2 small{background:#367A00} .t3 small{background:#0A6FA8}
+.badge,.wrapped{background:linear-gradient(165deg,#3D8E02,#2A6B00)}
+.scorebox div{background:rgba(0,0,0,.2)} .wrapped .grid div{background:rgba(0,0,0,.18)}
+.halo{display:grid;place-items:center;width:104px;height:104px;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.sev.s1{color:var(--sev1)} .sev.s2{color:var(--sev2)} .sev.s3{color:var(--sev3)}
+.tone.casual{color:var(--tone-casual)} .tone.local{color:var(--tone-local)}
+.offline{background:var(--banner)}
+.node{background:var(--node-off);box-shadow:0 6px 0 color-mix(in srgb,var(--node-off) 65%,#000)}
+.mode button,.reg button{position:relative}
+.mode button::after{content:"";position:absolute;inset:-8px -3px}
+.reg button::after{content:"";position:absolute;inset:-7px 0}
+.xbtn{min-width:44px;min-height:44px;display:grid;place-items:center;margin-left:-10px}
+@media (prefers-contrast: more){.btn{background:#2E7300;box-shadow:0 4px 0 #1E4D00}.btn.blue{background:#086394;box-shadow:0 4px 0 #054466}.btn.ghost{background:var(--card)}}
+@media (prefers-reduced-motion:reduce){.mic.listen{animation:none}.col{scroll-behavior:auto}}
+
+/* Country themes. The screen carries --th-* custom properties once a destination is picked. */
+.screen{--th:var(--green);--th-d:var(--green-d);--th2:var(--purple);--th2-d:var(--purple-d);--th-soft:var(--soft);--th-ink:var(--green-ink)}
+.screen.themed{--th-soft:var(--th-soft-l);--th-ink:var(--th-ink-l)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .screen.themed{--th-soft:var(--th-soft-dk);--th-ink:var(--th-ink-dk)}}
+:root[data-theme="dark"] .screen.themed{--th-soft:var(--th-soft-dk);--th-ink:var(--th-ink-dk)}
+.btn.themed{background:var(--th);box-shadow:0 4px 0 var(--th-d)}
+.btn.themed:active{box-shadow:0 1px 0 var(--th-d)}
+.btn.themed2{background:var(--th2);box-shadow:0 4px 0 var(--th2-d)}
+.btn.themed2:active{box-shadow:0 1px 0 var(--th2-d)}
+.unit{background:var(--th);box-shadow:0 4px 0 var(--th-d);position:relative;overflow:hidden;min-height:56px}
+.unit .utx{position:relative;z-index:1;min-width:0}
+.unit .pat{position:absolute;inset:0;background:#fff;opacity:.13;-webkit-mask:var(--th-pat) 0 0/48px 48px repeat;mask:var(--th-pat) 0 0/48px 48px repeat;pointer-events:none}
+.screen:not(.themed) .unit .pat{display:none}
+.unit .book{position:relative;z-index:1}
+.themed .unit .book{border-left:0;padding-left:0;margin:-8px -10px -10px 0}
+.themed .unit .book svg{display:block;width:120px;height:62px}
+.pathwrap{position:relative;border-radius:24px;padding:44px 0 14px;overflow:hidden}
+.themed .pathwrap{background:var(--th-soft)}
+.themed .pathwrap::before{content:"";position:absolute;inset:0;background:var(--th);opacity:.09;-webkit-mask:var(--th-pat) 0 0/48px 48px repeat;mask:var(--th-pat) 0 0/48px 48px repeat;pointer-events:none}
+.pathwrap .path{position:relative}
+.node.now{background:var(--th);box-shadow:0 6px 0 var(--th-d)}
+.node.trophy{background:var(--th2);box-shadow:0 6px 0 var(--th2-d)}
+.node .emb svg{display:block;width:44px;height:44px}
+.startflag{color:var(--th-ink)}
+.lbl em{color:var(--th-ink)}
+.deco{position:absolute;top:2px;width:56px;height:56px;pointer-events:none}
+.deco svg{width:100%;height:100%;display:block}
+.deco.r{left:calc(50% + 62px)}.deco.l{right:calc(50% + 62px)}
+.dests{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.destbtn{--bs:var(--bs-l);--bi:var(--bi-l);position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;padding:8px 8px 10px;border:2px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 4px 0 var(--line);cursor:pointer;font:inherit;color:var(--fg);min-width:0;transition:transform .15s}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .destbtn{--bs:var(--bs-dk);--bi:var(--bi-dk)}}
+:root[data-theme="dark"] .destbtn{--bs:var(--bs-dk);--bi:var(--bi-dk)}
+.destbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.destbtn .dart{display:block;border-radius:12px;overflow:hidden;aspect-ratio:3/2;background:var(--soft)}
+.destbtn .dart svg{display:block;width:100%;height:100%}
+.destbtn .dtx{display:flex;flex-direction:column;gap:1px;padding:0 4px}
+.destbtn b{font-size:16px;font-weight:900}
+.destbtn small{font-size:13px;font-weight:700;color:var(--muted)}
+.destbtn.on{border-color:var(--b);background:var(--bs);box-shadow:0 4px 0 var(--bd)}
+.destbtn.on b{color:var(--bi)}
+.destbtn .dtick{position:absolute;top:2px;right:2px;width:26px;height:26px;border-radius:50%;background:var(--b);color:#fff;display:grid;place-items:center;font-weight:900;font-size:15px;box-shadow:0 2px 0 var(--bd)}
+.destbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.reaction .face,.duo-bob,.startflag{animation:none!important}.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <section class="guide" aria-label="About this prototype">
+    <span class="tag">Try it yourself · 60 seconds</span><br>
+    <span class="wordmark" id="guideMark"></span>
+    <h1>Know the manners before you land</h1>
+    <p>A concept for Duolingo that turns a travel date into a plan, keeps it useful in the country, and carries the habit home. Switch between <b>Free</b> and <b>Trip Pass</b> at the top of the phone to see what each one gets.</p>
+    <div class="legend"><span class="t free">FREE</span><span class="t pass">TRIP PASS</span><span class="t super">SUPER</span></div>
+    <ol>
+      <li>Before: pick Japan or Korea and your exact travel date</li>
+      <li>Take the 60-second trip-ready check (5 situations)</li>
+      <li>See how locals react and how serious each slip is</li>
+      <li>Earn your badge and share it</li>
+      <li>In the country: phrases, polite or casual, and regional dialects</li>
+      <li>Back home: Trip Wrapped and the Super offer</li>
+    </ol>
+    <h3>Built on learning research</h3>
+    <ul>
+      <li>Guess first. Trying before being taught improves later recall (Richland, Kornell and Kao, 2009).</li>
+      <li>Severity ratings show which slips matter most, and the most serious mistakes come first in review.</li>
+      <li>Beginner and intermediate paths, so lessons start at the right level.</li>
+    </ul>
+    <p class="note">Concept prototype by SVR Consulting for the think-cell Global Case Competition 2026. Illustrative only, not an official Duolingo product. No sign-in and no payment. Calls and speech scoring are simulated. Japan etiquette draws on the Japan Tourism Agency's "Travel Etiquette for the Future" (Nov 2024) and travel etiquette guides. Scores and figures are illustrative.</p>
+  </section>
+
+  <div class="phone">
+    <span class="hw hw-action" aria-hidden="true"></span><span class="hw hw-vol1" aria-hidden="true"></span><span class="hw hw-vol2" aria-hidden="true"></span><span class="hw hw-power" aria-hidden="true"></span>
+    <span class="island" aria-hidden="true"></span>
+    <div class="screen" id="screen">
+      <div class="status" aria-hidden="true"><span id="clock"></span><span class="row" style="gap:5px" id="statusIcons"></span></div>
+      <div class="concept">Concept prototype · SVR Consulting · not an official Duolingo product</div>
+      <div class="mode" role="group" aria-label="View as">View as
+        <button type="button" class="freeb" id="mFree" data-act="mode" data-v="free">Free</button>
+        <button type="button" id="mPass" data-act="mode" data-v="pass">Trip Pass</button>
+      </div>
+      <div class="top">
+        <span class="chip" id="dest"></span>
+        <span class="chips"><span class="chip flame" id="streak"></span><span class="chip gem" id="xp"></span><span class="chip heart" id="hearts"></span></span>
+      </div>
+      <main class="view" id="view" aria-live="polite"></main>
+      <nav class="nav" id="nav" aria-label="Trip stages">
+        <button type="button" data-tab="ready"><span class="ic" id="navA"></span>Before</button>
+        <button type="button" data-tab="set"><span class="ic" id="navB"></span>In the country</button>
+        <button type="button" data-tab="go"><span class="ic" id="navC"></span>Back home</button>
+      </nav>
+      <span class="homebar" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const PUBLIC_URL = /^https?:$/.test(location.protocol) ? location.origin + location.pathname.replace(/index\.html$/, '') : 'https://sebastianlew06.github.io/duotrips/';
+
+/* Duo, drawn as a simple inline illustration. Moods: happy, sad, cheer. */
+/* Duo. Optional outfit layers: back (behind body), mid (on the torso, under eyes and beak), top (over everything). */
+function duo(mood = 'happy', size = 64, cls = '', outfit = {}){
+  const py = mood === 'sad' ? 55 : 50, wingY = mood === 'cheer' ? 36 : 80;
+  const brows = mood === 'sad' ? '<path d="M28 31 L50 38" stroke="#3A8A00" stroke-width="5" stroke-linecap="round"/><path d="M92 31 L70 38" stroke="#3A8A00" stroke-width="5" stroke-linecap="round"/>' : '';
+  const eyes = mood === 'cheer'
+    ? '<path d="M32 52 Q42 40 52 52" stroke="#2B2F33" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M68 52 Q78 40 88 52" stroke="#2B2F33" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    : `<circle cx="45" cy="${py}" r="7.5" fill="#2B2F33"/><circle cx="75" cy="${py}" r="7.5" fill="#2B2F33"/><circle cx="47.5" cy="${py-3}" r="2.5" fill="#fff"/><circle cx="77.5" cy="${py-3}" r="2.5" fill="#fff"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="${cls}" viewBox="0 0 120 120" width="${size}" height="${size}" aria-hidden="true">${outfit.back || ''}
+    <ellipse cx="44" cy="111" rx="11" ry="5" fill="#FF9600"/><ellipse cx="76" cy="111" rx="11" ry="5" fill="#FF9600"/>
+    <path d="M20 60 Q2 ${wingY} 22 98 Z" fill="#46A302"/><path d="M100 60 Q118 ${wingY} 98 98 Z" fill="#46A302"/>
+    <path d="M30 28 L22 6 L46 20 Z" fill="#58CC02"/><path d="M90 28 L98 6 L74 20 Z" fill="#58CC02"/>
+    <path d="M60 14 C92 14 104 38 104 64 C104 94 86 108 60 108 C34 108 16 94 16 64 C16 38 28 14 60 14 Z" fill="#58CC02"/>
+    <ellipse cx="60" cy="86" rx="26" ry="19" fill="#89E219"/>${outfit.mid || ''}
+    <circle cx="42" cy="50" r="16" fill="#fff"/><circle cx="78" cy="50" r="16" fill="#fff"/>${eyes}${brows}
+    <path d="M51 63 Q60 58 69 63 L60 76 Z" fill="#FF9600"/>${outfit.top || ''}</svg>`;
+}
+function duoSay(text, mood = 'happy', size = 64, outfit = {}){ return `<div class="duo-say">${duo(mood, size, 'duo-bob', outfit)}<div class="bubble">${text}</div></div>`; }
+
+window.SCENES = {};
+SCENES.airport = {
+  label: 'A bright airport departures hall: a big glass window looks out on a parked green-and-white jet and a control tower, with a departures board showing Tokyo boarding and Seoul on time. Duo is dressed as a flight captain.',
+  bg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 260" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="airport-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6CC8FF"/><stop offset="1" stop-color="#D2F0FF"/></linearGradient>
+<linearGradient id="airport-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C7D4DE"/><stop offset="1" stop-color="#EDF2F6"/></linearGradient>
+<clipPath id="airport-fus"><path d="M200 102H326C342 102 360 96 374 90C377 89 379 92 377 95C368 110 352 126 330 130H196C184 130 176 126 176 119C177 110 188 102 200 102Z"/></clipPath>
+</defs>
+<rect width="390" height="172" fill="url(#airport-sky)"/>
+<circle cx="256" cy="46" r="14" fill="#FFF4B8"/>
+<g fill="#fff">
+<path d="M232 66a9 9 0 0 1 15-7a12 12 0 0 1 22 3a7 7 0 0 1 1 14h-36a5 5 0 0 1-2-10z"/>
+<path d="M178 40a7 7 0 0 1 12-5a9 9 0 0 1 17 3a5 5 0 0 1 0 10h-27a4 4 0 0 1-2-8z"/>
+<path d="M124 104a6 6 0 0 1 10-4a8 8 0 0 1 14 2a4 4 0 0 1 0 8h-22a3 3 0 0 1-2-6z"/>
+</g>
+<path d="M0 126Q60 108 122 122Q200 102 284 120Q340 110 390 122V130H0Z" fill="#BFE6CF"/>
+<rect y="124" width="390" height="5" fill="#9ED85C"/>
+<rect y="129" width="390" height="43" fill="#B4C0CA"/>
+<path d="M166 152Q272 145 390 158" stroke="#FFD43B" stroke-width="2.4" stroke-dasharray="12 9" fill="none"/>
+<path d="M24 126V114Q24 102 46 100H84Q106 102 106 114V126Z" fill="#DCE5EC"/>
+<path d="M36 126V113H94V126" fill="#C3CFD9"/>
+<path d="M30 106Q34 102 46 101.5H84Q96 102 100 106" stroke="#9ED85C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M50 113V126M65 113V126M80 113V126" stroke="#D3DDE5" stroke-width="1.4"/>
+<rect x="206" y="74" width="9" height="30" fill="#C3CFD9"/>
+<rect x="210.5" y="74" width="4.5" height="30" fill="#AEBBC6"/>
+<path d="M196 68H225L221 78H200Z" fill="#4C6A8A"/>
+<rect x="198" y="63" width="25" height="5" rx="2" fill="#F2F6F9"/>
+<path d="M210.5 63V55" stroke="#B4C0CA" stroke-width="1.6"/>
+<circle cx="210.5" cy="54.5" r="1.8" fill="#FF4B4B"/>
+<ellipse cx="272" cy="157" rx="100" ry="3.5" fill="#000" opacity=".12"/>
+<path d="M200 129v22M281 133v18" stroke="#5B6B78" stroke-width="2.6"/>
+<circle cx="200" cy="153" r="4.5" fill="#2B2F33"/><circle cx="276" cy="153" r="5" fill="#2B2F33"/><circle cx="287" cy="153" r="5" fill="#2B2F33"/>
+<path d="M322 103L350 62C352 59 354 58 357 58H368C371 58 373 61 372 64L368 96Z" fill="#58CC02"/>
+<path d="M334 92Q352 84 370 70L369 80Q354 92 330 98Z" fill="#89E219"/>
+<g clip-path="url(#airport-fus)">
+<rect x="170" y="88" width="215" height="45" fill="#fff"/>
+<rect x="170" y="121" width="215" height="12" fill="#58CC02"/>
+<rect x="170" y="118" width="215" height="3" fill="#89E219"/>
+</g>
+<path d="M338 112L370 104C374 103 376 106 374 108L348 119Z" fill="#46A302"/>
+<path d="M185 110Q190 105 199 104.5L200 111H184Z" fill="#2B3F5C"/>
+<path d="M212 111H318" stroke="#2B3F5C" stroke-width="4.4" stroke-linecap="round" stroke-dasharray="0 8.5"/>
+<rect x="205" y="106" width="7" height="13" rx="2" fill="none" stroke="#C9D3DB" stroke-width="1.2"/>
+<path d="M244 121H284L322 146C323 148 321 149 318 149H306Z" fill="#DCE4EB"/>
+<path d="M284 121L322 146C323 148 321 149 318 149L314 149L280 124Z" fill="#C5D0D9"/>
+<rect x="252" y="124" width="8" height="8" fill="#C9D3DB"/>
+<rect x="238" y="129" width="34" height="15" rx="7.5" fill="#EEF3F6"/>
+<rect x="262" y="129" width="10" height="15" rx="5" fill="#58CC02"/>
+<ellipse cx="240.5" cy="136.5" rx="3" ry="6.5" fill="#2B3F5C"/>
+<g fill="#fff" opacity=".22">
+<path d="M14 26H38L0 92V66Z"/><path d="M196 26H230L178 120V74Z"/><path d="M316 26H336L296 98V62Z"/>
+</g>
+<g fill="#E3EAF0">
+<rect x="166" y="20" width="6" height="152"/>
+<rect x="348" y="20" width="6" height="152"/>
+</g>
+<g fill="#C6D2DC"><rect x="170" y="20" width="2" height="152"/><rect x="352" y="20" width="2" height="152"/></g>
+<rect y="0" width="390" height="22" fill="#E7EDF2"/>
+<rect y="20" width="390" height="5" fill="#D2DCE4"/>
+<g fill="#fff"><rect x="8" y="8" width="64" height="5" rx="2.5"/><rect x="112" y="8" width="64" height="5" rx="2.5"/><rect x="216" y="8" width="64" height="5" rx="2.5"/><rect x="320" y="8" width="64" height="5" rx="2.5"/></g>
+<rect y="166" width="390" height="8" fill="#A9B8C4"/>
+<rect y="174" width="390" height="86" fill="url(#airport-floor)"/>
+<g fill="#fff" opacity=".35"><path d="M0 176H164L150 230H0Z"/><path d="M174 176H346L356 230H182Z"/></g>
+<path d="M0 196H390M0 222H390" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/>
+<path d="M44 25V30M128 25V30" stroke="#8C9CA9" stroke-width="2"/>
+<rect x="16" y="29" width="140" height="62" rx="8" fill="#1E2A4A"/>
+<g font-family="Nunito, 'Arial Rounded MT Bold', Arial, sans-serif" font-weight="900">
+<text x="24" y="43" font-size="9.5" fill="#FFC800" letter-spacing="1">DEPARTURES</text>
+<g transform="translate(139 38) rotate(-28)" fill="#FFC800"><rect x="-7.5" y="-1.6" width="15" height="3.2" rx="1.6"/><path d="M1 0L-4 7.5H-1.5L5 0ZM1 0L-4-7.5H-1.5L5 0ZM-6 0L-8.5-4H-6.5L-3.5 0ZM-6 0L-8.5 4H-6.5L-3.5 0Z"/></g>
+<rect x="24" y="48" width="124" height="1.4" fill="#34416A"/>
+<text x="24" y="64" font-size="10.5" fill="#fff">TOKYO <tspan fill="#9FB0D0">NRT</tspan></text>
+<text x="148" y="64" font-size="9.5" fill="#7EE02A" text-anchor="end">BOARDING</text>
+<rect x="24" y="70" width="124" height="1" fill="#34416A"/>
+<text x="24" y="84" font-size="10.5" fill="#fff">SEOUL <tspan fill="#9FB0D0">ICN</tspan></text>
+<text x="148" y="84" font-size="9.5" fill="#7FD4FF" text-anchor="end">ON TIME</text>
+</g>
+<path d="M306 25V31M338 25V31" stroke="#8C9CA9" stroke-width="2"/>
+<rect x="294" y="30" width="72" height="20" rx="6" fill="#FFC800"/>
+<text x="330" y="44.5" font-family="Nunito, 'Arial Rounded MT Bold', Arial, sans-serif" font-weight="900" font-size="11" fill="#1E2A4A" text-anchor="middle">GATE 12</text>
+</svg>`,
+  outfit: {
+    back: '',
+    mid: `<path d="M35 85C35 78 39 74 45 73L60 81L75 73C81 74 85 78 85 85C85 97 74 105 60 105C46 105 35 97 35 85Z" fill="#fff"/>
+<path d="M45 73L60 81L50 87Z" fill="#fff" stroke="#C9D3DB" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M75 73L60 81L70 87Z" fill="#fff" stroke="#C9D3DB" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M56.5 80H63.5L62 86H58Z" fill="#1E2A4A"/>
+<path d="M58 86H62L65.5 99L60 104L54.5 99Z" fill="#1E2A4A"/>
+<rect x="55.5" y="93" width="9" height="2" rx="1" fill="#FFC800"/>
+<g transform="translate(75 90) scale(1.25)" fill="#FFC800"><path d="M0-.5C-3-2.5-6-2.5-7.5-1.5C-5.5 0-3 1 0 1.2ZM0-.5C3-2.5 6-2.5 7.5-1.5C5.5 0 3 1 0 1.2Z"/><circle r="1.7"/></g>
+<g transform="rotate(28 26 68)"><rect x="15" y="64.5" width="22" height="7.5" rx="3.75" fill="#1E2A4A"/><path d="M20 66v4.5M23.5 66v4.5M27 66v4.5M30.5 66v4.5" stroke="#FFC800" stroke-width="1.7"/></g>
+<g transform="rotate(-28 94 68)"><rect x="83" y="64.5" width="22" height="7.5" rx="3.75" fill="#1E2A4A"/><path d="M89.5 66v4.5M93 66v4.5M96.5 66v4.5M100 66v4.5" stroke="#FFC800" stroke-width="1.7"/></g>`,
+    top: `<g transform="translate(0 -1) rotate(-5 60 20)"><path d="M38 23C27 21 23 13 31 8C42 2 78 2 89 8C97 13 93 21 82 23Z" fill="#1E2A4A"/>
+<path d="M34 9.5C44 5 76 5 86 9.5" stroke="#34416A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<rect x="37" y="19" width="46" height="10" rx="3" fill="#141C33"/>
+<path d="M60 16C55 11 47 10 41 12C46 15 52 18 60 19ZM60 16C65 11 73 10 79 12C74 15 68 18 60 19Z" fill="#FFC800"/>
+<circle cx="60" cy="16" r="4.5" fill="#FFC800"/><circle cx="60" cy="16" r="2.2" fill="#58CC02"/>
+<path d="M36 27Q60 22 84 27C80 33 70 36 60 36C50 36 40 33 36 27Z" fill="#14171C"/>
+<path d="M45 30Q53 32.5 60 32.5" stroke="#fff" stroke-opacity=".4" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<path d="M39 23.5H81" stroke="#FFC800" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="39" cy="23.5" r="2.2" fill="#FFC800"/><circle cx="81" cy="23.5" r="2.2" fill="#FFC800"/></g>`
+  }
+};
+SCENES.japan = {
+  label: 'Mount Fuji rising behind a vermilion torii gate framed by cherry blossoms; Duo wears an indigo kimono with a coral obi and a sakura hair ornament.',
+  bg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 260" preserveAspectRatio="xMidYMid slice">
+<defs><linearGradient id="japan-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCDF6"/><stop offset=".45" stop-color="#BFE6FB"/><stop offset=".72" stop-color="#FFE6EE"/></linearGradient>
+<clipPath id="japan-fuji"><path d="M136 168Q236 136 266 56Q274 52 282 55Q290 52 302 56Q334 136 434 168Z"/></clipPath><g id="japan-bl"><g fill="#F39BBB"><circle cx="0" cy="1.4" r="6.2"/><circle cx="7.5" cy="-1.1" r="5"/><circle cx="-7.5" cy="2.4" r="5.2"/><circle cx="3.5" cy="6.9" r="4.8"/><circle cx="-3.5" cy="-4.1" r="4.6"/><circle cx="10.5" cy="4.9" r="4"/><circle cx="-10.5" cy="6.9" r="3.8"/></g><g fill="#FFB9D0"><circle cx="0" cy="0" r="5.7"/><circle cx="7.5" cy="-2.5" r="4.6"/><circle cx="-7.5" cy="1" r="4.8"/><circle cx="3.5" cy="5.5" r="4.4"/><circle cx="-3.5" cy="-5.5" r="4.2"/><circle cx="10.5" cy="3.5" r="3.7"/><circle cx="-10.5" cy="5.5" r="3.5"/></g><g fill="#FFD9E6"><circle cx="-3.2" cy="-3.6" r="3"/><circle cx="5" cy="-3.8" r="2.2"/></g></g></defs>
+<rect width="390" height="260" fill="url(#japan-sky)"/>
+<g fill="#fff" opacity=".85"><path d="M40 92a12 12 0 0 1 22-6a9 9 0 0 1 14 7h-36z"/></g>
+<path d="M-10 160Q40 128 92 146Q130 120 170 150L170 175H-10Z" fill="#B8C8F2"/>
+<g clip-path="url(#japan-fuji)" transform="matrix(1 0 0 1.1 0 -16.8)"><rect x="130" y="40" width="300" height="140" fill="#7896E6"/>
+<path d="M284 40L330 40L440 180L300 180Q296 120 284 54Z" fill="#6683D8"/>
+<path d="M230 40H340V88Q334 84 330 92Q324 86 318 98Q312 88 306 95Q300 86 293 101Q287 88 280 96Q273 86 266 99Q259 88 252 94Q246 86 240 92L230 92Z" fill="#fff"/>
+<path d="M284 40H340V88Q334 84 330 92Q324 86 318 98Q312 88 306 95Q300 86 293 101Q290 94 287 92Q290 70 284 54Z" fill="#DFE8FB"/></g>
+<path d="M232 107Q248 100 264 107Q287 99 310 109Q287 114 264 111Q248 114 232 107Z" fill="#fff" opacity=".8"/>
+<path d="M-10 172Q60 140 130 156Q200 132 280 150Q340 138 400 152L400 260H-10Z" fill="#8BD45A"/>
+<path d="M-10 186Q80 164 170 176Q270 160 400 176L400 260H-10Z" fill="#A5E07A"/>
+<path d="M92 170Q90 154 104 154Q108 144 120 148Q130 142 136 152Q150 152 150 170Z M232 168Q228 152 242 150Q248 140 260 146Q272 144 274 156Q286 158 284 170Z" fill="#62B83C"/>
+<g transform="translate(194 161)scale(1.08)"><ellipse cx="0" cy="1" rx="40" ry="3" fill="#6FBF45"/><path d="M-26.6 -80H-20.6L-22.25 0H-29.75ZM20.6 -80H26.6L29.75 0H22.25Z" fill="#E8452C"/><path d="M-22.6 -80H-20.6L-22.25 0H-24.5ZM24.6 -80H26.6L29.75 0H27.5Z" fill="#C4361F"/><path d="M-44 -85.8H44V-80.6C38 -77.4 32 -76 24 -76H-24C-32 -76 -38 -77.4 -44 -80.6Z" fill="#E8452C"/><path d="M-44 -82.1C-38 -78.9 -32 -77.5 -24 -77.5H24C32 -77.5 38 -78.9 44 -82.1V-80.6C38 -77.4 32 -76 24 -76H-24C-32 -76 -38 -77.4 -44 -80.6Z" fill="#C4361F"/><path d="M-53 -96C-46 -89 -38 -87 -26 -86.4H26C38 -87 46 -89 53 -96L52.2 -90.6C45 -84.6 37 -81.6 26 -80.8H-26C-37 -81.6 -45 -84.6 -52.2 -90.6Z" fill="#38333F"/><path d="M-52.4 -95.1C-45.6 -88.3 -37.8 -86.4 -26 -85.8H26C37.8 -86.4 45.6 -88.3 52.4 -95.1" stroke="#5B5468" stroke-width="1.1" fill="none"/><rect x="-2.6" y="-76.5" width="5.2" height="13" fill="#E8452C"/><rect x="-4.2" y="-74.2" width="8.4" height="7.6" rx="1" fill="#38333F" stroke="#F2B544" stroke-width=".9"/><rect x="-35" y="-64" width="70" height="5.2" fill="#E8452C"/><rect x="-35" y="-60.3" width="70" height="1.5" fill="#C4361F"/><path d="M-30.5 -9H-21.5L-21.2 0H-30.8ZM21.5 -9H30.5L30.8 0H21.2Z" fill="#38333F"/><path d="M-30.9 -10.2H-21.1V-8.4H-30.9ZM21.1 -10.2H30.9V-8.4H21.1Z" fill="#5B5468"/></g>
+<g fill="#7A5140"><rect x="137" y="150" width="3" height="16"/><rect x="250" y="148" width="3" height="18"/></g><use href="#japan-bl" transform="translate(138 148)scale(1.25)"/><use href="#japan-bl" transform="translate(251 146)scale(1.35)"/><use href="#japan-bl" transform="translate(149 165)scale(0.8)"/><use href="#japan-bl" transform="translate(247 164)scale(0.85)"/>
+<g stroke="#8A5A45" stroke-linecap="round" fill="none"><path d="M-6 34Q30 22 62 20T112 8" stroke-width="5"/><path d="M34 26Q46 38 58 48" stroke-width="3.2"/><path d="M62 20Q78 6 96 2" stroke-width="2.6"/>
+<path d="M398 30Q364 16 336 18T300 4" stroke-width="5"/><path d="M366 22Q368 40 374 52" stroke-width="3.2"/><path d="M336 18Q326 30 312 34" stroke-width="2.4"/></g>
+<use href="#japan-bl" transform="translate(18 18)scale(1.7)"/><use href="#japan-bl" transform="translate(52 10)scale(1.5)"/><use href="#japan-bl" transform="translate(86 6)scale(1.1)"/><use href="#japan-bl" transform="translate(36 38)scale(1.1)"/><use href="#japan-bl" transform="translate(60 48)scale(0.8)"/><use href="#japan-bl" transform="translate(108 10)scale(0.7)"/><use href="#japan-bl" transform="translate(372 16)scale(1.7)"/><use href="#japan-bl" transform="translate(340 8)scale(1.3)"/><use href="#japan-bl" transform="translate(376 50)scale(1.1)"/><use href="#japan-bl" transform="translate(314 32)scale(0.9)"/><use href="#japan-bl" transform="translate(310 6)scale(0.7)"/>
+<g><path d="M24 14C21.2 8.6 28.2 9.6 24 14M24 14C28.3 9.7 29.5 16.6 24 14M24 14C29.4 16.7 23.2 20 24 14M24 14C23.1 20 18 15.1 24 14M24 14C18 15 21.1 8.7 24 14" fill="#fff"/><circle cx="24" cy="14" r="1.3" fill="#FF7FA8"/><path d="M52 30C51.5 24.6 56.9 27.8 52 30M52 30C57 27.8 55.6 34 52 30M52 30C55.6 34 49.3 34.7 52 30M52 30C49.3 34.7 46.7 28.9 52 30M52 30C46.7 28.8 51.4 24.6 52 30" fill="#FFF3F7"/><circle cx="52" cy="30" r="1.1" fill="#FF7FA8"/><path d="M88 12C89.2 7.3 92.8 11.6 88 12M88 12C92.9 11.7 89.9 16.5 88 12M88 12C89.8 16.5 84.3 15.2 88 12M88 12C84.3 15.1 83.9 9.5 88 12M88 12C83.9 9.4 89.1 7.3 88 12" fill="#fff"/><circle cx="88" cy="12" r="1" fill="#FF7FA8"/><path d="M70 40C67.3 36.3 72.7 36.3 70 40M70 40C72.7 36.3 74.4 41.4 70 40M70 40C74.4 41.5 70 44.6 70 40M70 40C70 44.6 65.6 41.5 70 40M70 40C65.6 41.4 67.3 36.3 70 40" fill="#fff"/><circle cx="70" cy="40" r="1" fill="#FF7FA8"/>
+<path d="M364 14C362.4 8.1 369 10.6 364 14M364 14C369.1 10.6 368.8 17.7 364 14M364 14C368.8 17.8 362 19.7 364 14M364 14C361.9 19.7 357.9 13.8 364 14M364 14C357.9 13.7 362.3 8.2 364 14" fill="#fff"/><circle cx="364" cy="14" r="1.3" fill="#FF7FA8"/><path d="M342 30C342.8 24.9 347 29.1 342 30M342 30C347.1 29.2 344.4 34.5 342 30M342 30C344.4 34.5 338.5 33.7 342 30M342 30C338.4 33.7 337.4 27.8 342 30M342 30C337.4 27.7 342.7 24.9 342 30" fill="#FFF3F7"/><circle cx="342" cy="30" r="1.1" fill="#FF7FA8"/><path d="M376 44C373.5 39.9 379.1 40.3 376 44M376 44C379.2 40.3 380.5 45.8 376 44M376 44C380.5 45.9 375.7 48.9 376 44M376 44C375.6 48.8 371.3 45.2 376 44M376 44C371.3 45.1 373.4 39.9 376 44" fill="#fff"/><circle cx="376" cy="44" r="1" fill="#FF7FA8"/><path d="M326 12C323.5 8.5 328.5 8.5 326 12M326 12C328.6 8.5 330.1 13.3 326 12M326 12C330.1 13.4 326 16.3 326 12M326 12C326 16.3 321.9 13.4 326 12M326 12C321.9 13.3 323.4 8.5 326 12" fill="#fff"/><circle cx="326" cy="12" r="0.9" fill="#FF7FA8"/></g>
+<g><ellipse cx="120" cy="46" rx="3.2" ry="1.9" fill="#FFB3CB" transform="rotate(30 120 46)"/><ellipse cx="118" cy="80" rx="3.2" ry="1.9" fill="#FFC7D8" transform="rotate(-20 118 80)"/><ellipse cx="228" cy="30" rx="3.2" ry="1.9" fill="#FFB3CB" transform="rotate(40 228 30)"/><ellipse cx="96" cy="88" rx="3.2" ry="1.9" fill="#FFC7D8" transform="rotate(10 96 88)"/><ellipse cx="318" cy="66" rx="3.2" ry="1.9" fill="#FFB3CB" transform="rotate(-35 318 66)"/><ellipse cx="126" cy="118" rx="3.2" ry="1.9" fill="#FFC7D8" transform="rotate(15 126 118)"/><ellipse cx="40" cy="70" rx="3.2" ry="1.9" fill="#FFB3CB" transform="rotate(-10 40 70)"/></g>
+</svg>`,
+  outfit: { back: '', mid: `<path d="M16 61Q38 71 60 80.5Q82 71 104 61C104 94 86 108 60 108C34 108 16 94 16 61Z" fill="#3F51C8"/>
+<g><path d="M31 81C29.1 77.1 34.1 78 31 81M31 81C34.1 78 34.8 83 31 81M31 81C34.8 83.1 30.3 85.3 31 81M31 81C30.2 85.2 26.7 81.6 31 81M31 81C26.7 81.6 29.1 77.1 31 81" fill="#FFC2D6"/><circle cx="31" cy="81" r="0.9" fill="#FF7FA8"/><path d="M89 81C89.3 76.7 93.2 79.9 89 81M89 81C93.2 80 91.3 84.6 89 81M89 81C91.3 84.7 86.3 84.3 89 81M89 81C86.2 84.3 85 79.4 89 81M89 81C85 79.3 89.3 76.7 89 81" fill="#FFC2D6"/><circle cx="89" cy="81" r="0.9" fill="#FF7FA8"/><path d="M37 102C36.3 98.3 40.3 100.1 37 102M37 102C40.3 100.2 39.8 104.6 37 102M37 102C39.7 104.6 35.4 105.4 37 102M37 102C35.4 105.4 33.2 101.6 37 102M37 102C33.3 101.5 36.2 98.3 37 102" fill="#FFC2D6"/><circle cx="37" cy="102" r="0.8" fill="#FF7FA8"/><path d="M74 102C71.6 98.7 76.4 98.7 74 102M74 102C76.4 98.7 77.9 103.2 74 102M74 102C77.8 103.3 74 106 74 102M74 102C74 106 70.2 103.3 74 102M74 102C70.1 103.2 71.6 98.7 74 102" fill="#FFC2D6"/><circle cx="74" cy="102" r="0.8" fill="#FF7FA8"/></g>
+<path d="M47 88.5L59 82.5" stroke="#2E3C9E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M17 61.5Q38 71 61 80.6" stroke="#FFF4E4" stroke-width="4.4" fill="none"/>
+<path d="M103 61.5Q82 71 60 80.5L43 88" stroke="#FFF4E4" stroke-width="4.4" fill="none" stroke-linejoin="round"/>
+<path d="M51.5 97L48.4 105.6" stroke="#2E3C9E" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M20.2 87H99.8Q96.9 92.5 92.5 97H27.5Q23.1 92.5 20.2 87Z" fill="#F2546B"/>
+<path d="M22.5 92H97.5" stroke="#FFD44D" stroke-width="1.8"/><ellipse cx="60" cy="92" rx="4" ry="2.8" fill="#FFD44D"/>
+<path d="M18 61Q7 64 5 78V95Q5 106 15 106Q21 106 25 103Q20 86 23 63Z" fill="#3F51C8"/><path d="M102 61Q113 64 115 78V95Q115 106 105 106Q99 106 95 103Q100 86 97 63Z" fill="#3F51C8"/>
+<path d="M23 64Q20 86 25 103M97 64Q100 86 95 103" stroke="#2E3C9E" stroke-width="1.6" fill="none"/>
+<g><path d="M11 93C10.6 89.4 14.3 91.5 11 93M11 93C14.3 91.5 13.5 95.7 11 93M11 93C13.4 95.7 9.2 96.2 11 93M11 93C9.2 96.1 7.4 92.3 11 93M11 93C7.4 92.2 10.6 89.4 11 93" fill="#FFC2D6"/><circle cx="11" cy="93" r="0.8" fill="#FF7FA8"/><path d="M109 89C107.1 85.9 111.4 86.2 109 89M109 89C111.4 86.3 112.4 90.4 109 89M109 89C112.3 90.5 108.7 92.6 109 89M109 89C108.7 92.6 105.5 89.8 109 89M109 89C105.4 89.8 107.1 85.9 109 89" fill="#FFC2D6"/><circle cx="109" cy="89" r="0.8" fill="#FF7FA8"/></g>`, top: `<path d="M87 19V29.5M91 20V27.5" stroke="#E2B13C" stroke-width="1" fill="none"/><g fill="#FF8FB6"><circle cx="87" cy="31" r="1.5"/><circle cx="91" cy="29" r="1.5"/></g><path d="M88 15C85.1 7.2 94.5 9.7 88 15M88 15C94.5 9.8 95.1 19.5 88 15M88 15C95 19.6 85.9 23.1 88 15M88 15C85.8 23.1 79.6 15.5 88 15M88 15C79.6 15.4 84.9 7.2 88 15" fill="#FF8FB6"/><circle cx="88" cy="15" r="1.7" fill="#FFD44D"/><path d="M97 21C97.4 16.4 101.4 19.9 97 21M97 21C101.5 19.9 99.5 24.9 97 21M97 21C99.4 24.9 94.1 24.5 97 21M97 21C94 24.5 92.7 19.3 97 21M97 21C92.8 19.2 97.3 16.4 97 21" fill="#FFD2E1"/><circle cx="97" cy="21" r="1" fill="#FFD44D"/>` }
+};
+SCENES.korea = {
+  label: 'Gwanghwamun Gate of Gyeongbokgung Palace in Seoul, with green Bugaksan mountain behind and autumn ginkgo and maple trees; Duo wears a hanbok: yellow jeogori with rainbow saekdong sleeves, a purple-red otgoreum bow and a red chima.',
+  bg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 260" preserveAspectRatio="xMidYMid slice">
+<defs><linearGradient id="korea-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CCBF5"/><stop offset=".5" stop-color="#C4E9FB"/><stop offset=".75" stop-color="#FFF0DA"/></linearGradient>
+<clipPath id="korea-roof1"><path d="M206 44L274 44Q294 61 329 57Q318 67 290 68.5Q240 71.5 190 68.5Q162 67 151 57Q186 61 206 44Z"/></clipPath>
+<clipPath id="korea-roof2"><path d="M196 80L284 80Q304 90 339 85Q326 93 300 94.5Q240 97 180 94.5Q154 93 141 85Q176 90 196 80Z"/></clipPath></defs>
+<rect width="390" height="260" fill="url(#korea-sky)"/>
+<g fill="#fff" opacity=".9"><path d="M96 40a11 11 0 0 1 20-6a9 9 0 0 1 15 6z"/><path d="M318 36a9 9 0 0 1 17-4a7 7 0 0 1 12 4z"/></g>
+<path d="M-10 150Q20 104 58 94Q82 88 104 104Q126 118 150 150Z" fill="#9FCBB6"/>
+<path d="M76 170C120 136 170 74 214 42C234 27 250 20 264 21C284 23 304 44 330 68C352 88 378 98 400 104V170Z" fill="#63B96D"/>
+<path d="M264 21C284 23 304 44 330 68C352 88 378 98 400 104V170H300Q296 92 264 21Z" fill="#54A961"/>
+<g fill="#86C98A"><path d="M228 40q8-4 12 2q-6 4-12-2z"/><path d="M176 86q9-4 13 3q-7 3-13-3z"/></g>
+<rect x="-10" y="170" width="410" height="90" fill="#E4E0D6"/>
+<path d="M196 260L224 176H256L284 260Z" fill="#EEEAE2"/>
+<g fill="#8A5A43"><rect x="57" y="108" width="6" height="36" rx="2"/><rect x="106" y="114" width="4" height="28" rx="1.5"/><rect x="361" y="114" width="5" height="30" rx="2"/></g>
+<g fill="#E39F1C" transform="translate(0 -8)"><circle cx="61" cy="86" r="19"/><circle cx="46" cy="102" r="16"/><circle cx="76" cy="102" r="17"/><circle cx="61" cy="114" r="15"/><circle cx="52" cy="72" r="11"/><circle cx="69" cy="72" r="10"/><circle cx="110" cy="112" r="12"/><circle cx="100" cy="123" r="10"/><circle cx="120" cy="123" r="10"/></g>
+<g fill="#F5BA33" transform="translate(-2.5 -11)"><circle cx="61" cy="86" r="18"/><circle cx="46" cy="102" r="15"/><circle cx="76" cy="102" r="15.5"/><circle cx="61" cy="114" r="13.5"/><circle cx="52" cy="72" r="10.5"/><circle cx="69" cy="72" r="9.5"/><circle cx="110" cy="112" r="11"/><circle cx="100" cy="123" r="9"/><circle cx="120" cy="123" r="8.5"/></g>
+<g fill="#D0442A" transform="translate(0 -6)"><circle cx="372" cy="98" r="14"/><circle cx="357" cy="113" r="12"/><circle cx="386" cy="112" r="13"/><circle cx="370" cy="124" r="11"/></g>
+<g fill="#F0603F" transform="translate(-2.5 -9)"><circle cx="372" cy="98" r="13"/><circle cx="357" cy="113" r="11"/><circle cx="386" cy="112" r="12"/><circle cx="370" cy="124" r="9.5"/></g>
+<rect x="-10" y="132" width="150" height="44" fill="#E8D7BF"/><rect x="340" y="132" width="60" height="44" fill="#E8D7BF"/>
+<g fill="#D9C6AA"><rect x="-10" y="158" width="150" height="18"/><rect x="340" y="158" width="60" height="18"/></g>
+<g fill="#5B6472"><path d="M-10 125H140V133H-10Z"/><path d="M340 133V125H400V133Z"/></g>
+<rect x="136" y="118" width="208" height="60" fill="#E7E4DD"/><rect x="136" y="173" width="208" height="5" fill="#D6D1C6"/>
+<g stroke="#D6D1C6" stroke-width="1.2"><path d="M136 133H344M136 148H344M136 163H344"/><path d="M170 118V133M200 118V133M280 118V133M310 118V133M160 133V148M320 133V148M154 148V163M326 148V163"/></g>
+<rect x="132" y="115" width="216" height="5" rx="1.5" fill="#F2F0EB"/>
+<g fill="#F3F1EC"><path d="M223 178V146A17 17 0 0 1 257 146V178Z"/><path d="M179 178V154A13 13 0 0 1 205 154V178Z"/><path d="M275 178V154A13 13 0 0 1 301 154V178Z"/></g>
+<g fill="#5A3A32"><path d="M226 178V146A14 14 0 0 1 254 146V178Z"/><path d="M182 178V154A10 10 0 0 1 202 154V178Z"/><path d="M278 178V154A10 10 0 0 1 298 154V178Z"/></g>
+<g fill="#F3E3C6"><path d="M234 178V156A6 6 0 0 1 246 156V178Z"/><path d="M188 178V161A4 4 0 0 1 196 161V178Z"/><path d="M284 178V161A4 4 0 0 1 292 161V178Z"/></g>
+<g fill="#C8452F"><path d="M226 150V178H229.5V148Z M254 150V178H250.5V148Z M182 157V178H184.8V155Z M202 157V178H199.2V155Z M278 157V178H280.8V155Z M298 157V178H295.2V155Z"/></g>
+<g transform="translate(0 -2)"><rect x="182" y="96" width="116" height="14" fill="#5C3830"/>
+<g fill="#BC4430"><rect x="183" y="96" width="5" height="14"/><rect x="221" y="96" width="5" height="14"/><rect x="254" y="96" width="5" height="14"/><rect x="292" y="96" width="5" height="14"/></g>
+<rect x="176" y="92" width="128" height="5" fill="#3DB5A2"/><rect x="176" y="96.4" width="128" height="1.4" fill="#2A8577"/><rect x="182" y="97.8" width="116" height="1" fill="#E0573F"/>
+<g fill="#F7A541"><circle cx="186" cy="94.5" r="1"/><circle cx="198" cy="94.5" r="1"/><circle cx="210" cy="94.5" r="1"/><circle cx="222" cy="94.5" r="1"/><circle cx="234" cy="94.5" r="1"/><circle cx="246" cy="94.5" r="1"/><circle cx="258" cy="94.5" r="1"/><circle cx="270" cy="94.5" r="1"/><circle cx="282" cy="94.5" r="1"/><circle cx="294" cy="94.5" r="1"/></g></g>
+<rect x="142" y="110" width="196" height="6" fill="#8E8781"/><rect x="140" y="108" width="200" height="3.5" rx="1" fill="#6F6964"/>
+<g fill="#5E5853"><rect x="166" y="112.6" width="5" height="2.4"/><rect x="190" y="112.6" width="5" height="2.4"/><rect x="214" y="112.6" width="5" height="2.4"/><rect x="261" y="112.6" width="5" height="2.4"/><rect x="285" y="112.6" width="5" height="2.4"/><rect x="309" y="112.6" width="5" height="2.4"/></g>
+<g transform="translate(0 -2)"><rect x="198" y="66" width="84" height="16" fill="#7D3329"/>
+<g fill="#BC4430"><rect x="199" y="66" width="4" height="16"/><rect x="226" y="66" width="4" height="16"/><rect x="250" y="66" width="4" height="16"/><rect x="277" y="66" width="4" height="16"/></g>
+<rect x="190" y="64" width="100" height="6" fill="#3DB5A2"/><rect x="190" y="69.4" width="100" height="1.4" fill="#2A8577"/><rect x="198" y="70.8" width="84" height="1" fill="#E0573F"/>
+<g fill="#F7A541"><circle cx="196" cy="67.4" r="1.1"/><circle cx="207" cy="67.4" r="1.1"/><circle cx="218" cy="67.4" r="1.1"/><circle cx="262" cy="67.4" r="1.1"/><circle cx="273" cy="67.4" r="1.1"/><circle cx="284" cy="67.4" r="1.1"/></g>
+<path d="M196 80L284 80Q304 90 339 85Q326 93 300 94.5Q240 97 180 94.5Q154 93 141 85Q176 90 196 80Z" fill="#4E5765"/>
+<g clip-path="url(#korea-roof2)" stroke="#626C7B" stroke-width="1.4"><path d="M152 76V98M160 76V98M168 76V98M176 76V98M184 76V98M192 76V98M200 76V98M208 76V98M216 76V98M224 76V98M232 76V98M240 76V98M248 76V98M256 76V98M264 76V98M272 76V98M280 76V98M288 76V98M296 76V98M304 76V98M312 76V98M320 76V98M328 76V98"/></g>
+<path d="M141 85Q154 93 180 94.5Q240 97 300 94.5Q326 93 339 85" stroke="#A3ACB8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M196 80Q176 90 141 85M284 80Q304 90 339 85" stroke="#3B434F" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<g transform="translate(0 -4)"><path d="M206 44L274 44Q294 61 329 57Q318 67 290 68.5Q240 71.5 190 68.5Q162 67 151 57Q186 61 206 44Z" fill="#4E5765"/>
+<g clip-path="url(#korea-roof1)" stroke="#626C7B" stroke-width="1.4"><path d="M160 44V74M168 44V74M176 44V74M184 44V74M192 44V74M200 44V74M208 44V74M216 44V74M224 44V74M232 44V74M240 44V74M248 44V74M256 44V74M264 44V74M272 44V74M280 44V74M288 44V74M296 44V74M304 44V74M312 44V74M320 44V74"/></g>
+<path d="M151 57Q162 67 190 68.5Q240 71.5 290 68.5Q318 67 329 57" stroke="#A3ACB8" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M206 44Q186 61 151 57M274 44Q294 61 329 57" stroke="#3B434F" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M205 46.5Q188 59 157 57M275 46.5Q292 59 323 57" stroke="#E9EDF1" stroke-width="1" fill="none" opacity=".8"/>
+<g fill="#3B434F"><circle cx="168" cy="55.7" r="1.6"/><circle cx="174" cy="55.2" r="1.6"/><circle cx="180" cy="54.2" r="1.6"/><circle cx="312" cy="55.7" r="1.6"/><circle cx="306" cy="55.2" r="1.6"/><circle cx="300" cy="54.2" r="1.6"/></g>
+<rect x="203" y="39" width="74" height="6.5" rx="2" fill="#3B434F"/><rect x="204" y="43.2" width="72" height="1.4" fill="#E9EDF1"/>
+<path d="M200 45.5L201 35Q204 32 208 35.5L208 45.5Z M280 45.5L279 35Q276 32 272 35.5L272 45.5Z" fill="#3B434F"/></g>
+<rect x="230" y="67" width="20" height="10.5" rx="1" fill="#2B2B2B" stroke="#E9B949" stroke-width="1.2"/>
+<g fill="#E9B949"><rect x="233.5" y="69.7" width="3" height="5.2" rx=".8"/><rect x="238.5" y="69.7" width="3" height="5.2" rx=".8"/><rect x="243.5" y="69.7" width="3" height="5.2" rx=".8"/></g></g>
+</svg>`,
+  outfit: { back: '', mid: `<path d="M18 78 L50 78 L56 84 L62 78 L102 78 C104 86 106 94 106.5 99 C107 104 88 109.5 60 109.5 C32 109.5 13 104 13.5 99 C14 94 16 86 18 78 Z" fill="#EF4B5C"/>
+<path d="M28 86Q26 96 24 105M37 88Q36 98 35 107.5M83 85Q84 96 85 107.5M93 83Q95 94 96 105" stroke="#D63447" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".55"/>
+<path d="M15.2 101.5C30 106.5 90 106.5 104.8 101.5" stroke="#FFC94A" stroke-width="2" fill="none"/>
+<path d="M36.8 89.7L33.4 88.4L29.7 87.2L25.6 86.1L21.2 85.1L19.8 84.8L19.2 83.5L18.3 80.7L17.5 77.7L16.8 74.5L16.4 71.2L16.1 67.7L16 64L16.1 60.8L16.2 59.1L36 63L55.4 81.4L84 63L103.8 59.1L103.9 60.8L104 64L103.9 67.7L103.6 71.2L103.2 74.5L102.5 77.7L102.2 79.1L97.6 79.5L91.3 80.2L85 81.1L78.8 82.1L72.6 83.4L66.5 84.8L60.4 86.5L54.4 88.3L48.4 90.3L42.5 92.5L39.8 91Z" fill="#FFD23F"/>
+<path d="M33.7 63.9L56.2 84.9L54.2 87L31.7 66Z" fill="#A8206A"/><path d="M35 62.5L57.5 83.5L56.2 84.9L33.7 63.9Z" fill="#FFFFFF"/>
+<path d="M86 64.1L44.2 89.8L45.7 92.3L87.5 66.6Z" fill="#A8206A"/><path d="M85 62.5L43.2 88.2L44.2 89.8L86 64.1Z" fill="#FFFFFF"/>
+<path d="M41.2 90Q39.4 98.5 35.8 107.2L40.8 108.6Q42.6 99.5 45.2 90.6Z" fill="#A8206A"/>
+<path d="M44.2 90.6Q46.4 99 46.4 109.2L51.4 108.6Q50.6 98.6 48 90Z" fill="#A8206A"/>
+<path d="M46 87.4C49.5 82.6 58.5 82.2 59.6 86.4C60.4 89.6 53 91.6 46.4 90.8Z" fill="#A8206A"/><path d="M48.5 87.8C51.5 85.6 55.6 85.4 56.6 86.8" stroke="#7F164F" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+<rect x="40.6" y="85.6" width="7" height="5.6" rx="2.2" fill="#7F164F"/>
+<path d="M15.7 61L17.6 59.5L19.6 58.4L21.8 57.5L24 57L24.6 60.1L24.8 62L14.6 62Z" fill="#F2545B"/><path d="M12.2 64.6L13.9 62.6L14.9 61.7L24.8 61.7L25 63.4L25.3 66.8L10.7 66.8Z" fill="#FFD43B"/><path d="M25.3 66.4L25.3 66.8L25.5 70.4L25.6 71.6L8.3 71.6L9.4 69L10.7 66.7Z" fill="#4C8DF6"/><path d="M25.6 74L25.6 76.4L6.8 76.4L7.3 74.2L8.3 71.6L25.6 71.3Z" fill="#FF9EC9"/><path d="M25.5 81.2L6.1 81.2L6.2 80L6.7 77.1L6.9 76.1L25.6 76.1L25.6 77.7Z" fill="#A57BE8"/><path d="M25.2 86L6.1 86L6 83.9L6 82L6.1 80.9L25.5 80.9L25.5 81.4L25.3 85.1Z" fill="#F2545B"/><path d="M6.4 89.4L6.2 87.6L6.1 85.8L25.3 85.6L25 88.9L24.8 90.8L6.7 90.8Z" fill="#FFD43B"/><path d="M7.2 92.7L6.8 91.1L6.7 90.4L24.8 90.4L24.6 92.5L24.2 95.6L8.4 95.6L7.8 94.2Z" fill="#4C8DF6"/><path d="M20.3 100.4L19.2 100.5L18.2 100.6L17.1 100.7L16.1 100.6L15.1 100.5L14 100.4L13 100.1L12 99.9L11 99.5L10 98.3L9.2 97L8.5 95.7L24.2 95.4L24.1 96.1L23.5 99.5L22.4 99.9L21.3 100.1Z" fill="#3949AB"/>
+<path d="M105.4 62L95.2 62L95.4 60.1L96 57L98.2 57.5L100.4 58.4L102.4 59.5L104.3 61Z" fill="#F2545B"/><path d="M109.3 66.7L94.7 66.8L95 63.4L95.2 61.7L105.1 61.7L106.1 62.6L107.8 64.6Z" fill="#FFD43B"/><path d="M109.1 66.4L110.6 69L111.7 71.6L94.4 71.6L94.5 70.4L94.7 66.8L94.7 66.4Z" fill="#4C8DF6"/><path d="M94.4 71.3L111.6 71.3L112.7 74.2L113.2 76.4L94.4 76.4L94.4 74Z" fill="#FF9EC9"/><path d="M94.4 77.7L94.4 76.1L113.1 76.1L113.3 77.1L113.8 80L113.9 81.2L94.5 81.2Z" fill="#A57BE8"/><path d="M94.7 85.1L94.5 81.4L94.5 80.9L113.9 80.9L114 82L114 83.9L114 85.8L94.8 86Z" fill="#F2545B"/><path d="M113.3 90.8L95.2 90.8L95 88.9L94.7 85.6L114 85.6L113.8 87.6L113.6 89.4Z" fill="#FFD43B"/><path d="M112.2 94.2L111.6 95.6L95.8 95.6L95.4 92.5L95.2 90.4L113.3 90.4L113.2 91.1L112.8 92.7Z" fill="#4C8DF6"/><path d="M98.7 100.1L97.6 99.9L96.5 99.5L95.9 96.1L95.8 95.4L111.7 95.4L110.8 97L110 98.3L109 99.5L108 99.9L107 100.1L106 100.4L104.9 100.5L103.9 100.6L102.9 100.7L101.8 100.6L100.8 100.5L99.7 100.4Z" fill="#3949AB"/>`,
+  top: `<path d="M38 19.5Q60 13 82 19.5" stroke="#A8206A" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M60 15.2C63.6 15.2 65.4 17.6 65.4 19.4C65.4 21.4 63 23.4 60 23.4C57 23.4 54.6 21.4 54.6 19.4C54.6 17.6 56.4 15.2 60 15.2Z" fill="#E8456B"/><circle cx="60" cy="19.4" r="2" fill="#FFD23F"/>` }
+};
+
+/* Welcome-screen scenes: the airport until a destination is picked, then that country's landmark. */
+const sceneKey = () => S.picked ? (S.dest === 'Tokyo' ? 'japan' : 'korea') : 'airport';
+const SCENE_SAY = {
+  airport: 'Hi, I’m Captain Duo! Where are we flying today? Pick a destination below.',
+  japan: 'Konnichiwa! Japan it is. When do we take off?',
+  korea: 'Annyeonghaseyo! Korea it is. When do we take off?'
+};
+function heroHTML(){ const k = sceneKey(), from = S.shownScene || k;
+  return `<div class="hero" role="img" aria-label="${esc(SCENES[k].label)}">
+    ${Object.keys(SCENES).map(n => `<div class="hero-bg${n === from ? ' on' : ''}" data-scene="${n}" aria-hidden="true">${SCENES[n].bg}</div>`).join('')}
+    <div class="hero-duo${S.shownScene && S.shownScene !== k ? ' swap' : ''}">${duo('happy', 112, 'duo-bob', SCENES[k].outfit)}</div>
+    <div class="hero-say">${SCENE_SAY[k]}</div></div>`; }
+function animateHero(){ const k = sceneKey();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.hero-bg').forEach(el => el.classList.toggle('on', el.dataset.scene === k)); S.shownScene = k; })); }
+
+window.THEMES = {};
+THEMES.japan = { name: 'Japan', accent:'#D63A1E', accentDark:'#A8280F', accent2:'#3F51C8', accent2Dark:'#2E3C9E', soft:'#FFF3F5', softDark:'#2A1F27', ink:'#B02E17', inkDark:'#FFA294',
+  pattern:`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><defs><path id="japan-sw" d="M-19.3 -11.5A22.5 22.5 0 0 1 19.3 -11.5M-12.1 -8.9A15 15 0 0 1 12.1 -8.8M-6.2 -4.2A7.5 7.5 0 0 1 6.3 -4.1" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></defs><use href="#japan-sw" x="0" y="-24"/><use href="#japan-sw" x="48" y="-24"/><use href="#japan-sw" x="-24" y="-12"/><use href="#japan-sw" x="24" y="-12"/><use href="#japan-sw" x="72" y="-12"/><use href="#japan-sw" x="0" y="0"/><use href="#japan-sw" x="48" y="0"/><use href="#japan-sw" x="-24" y="12"/><use href="#japan-sw" x="24" y="12"/><use href="#japan-sw" x="72" y="12"/><use href="#japan-sw" x="0" y="24"/><use href="#japan-sw" x="48" y="24"/><use href="#japan-sw" x="-24" y="36"/><use href="#japan-sw" x="24" y="36"/><use href="#japan-sw" x="72" y="36"/><use href="#japan-sw" x="0" y="48"/><use href="#japan-sw" x="48" y="48"/><use href="#japan-sw" x="-24" y="60"/><use href="#japan-sw" x="24" y="60"/><use href="#japan-sw" x="72" y="60"/><use href="#japan-sw" x="0" y="72"/><use href="#japan-sw" x="48" y="72"/></svg>`,
+  pickArt:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 64" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="japan-th-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCDF6"/><stop offset=".5" stop-color="#BFE6FB"/><stop offset=".85" stop-color="#FFE6EE"/></linearGradient><clipPath id="japan-th-f"><path d="M136 168Q236 136 266 56Q274 52 282 55Q290 52 302 56Q334 136 434 168Z"/></clipPath><path id="japan-th-pp" d="M0 0C-3.8-2-4-7.4-1.8-10L0-8.2L1.8-10C4-7.4 3.8-2 0 0Z"/><g id="japan-th-bl"><g fill="#F39BBB"><circle cx="0" cy="1.4" r="6.2"/><circle cx="7.5" cy="-1.1" r="5"/><circle cx="-7.5" cy="2.4" r="5.2"/><circle cx="3.5" cy="6.9" r="4.8"/><circle cx="-3.5" cy="-4.1" r="4.6"/><circle cx="10.5" cy="4.9" r="4"/><circle cx="-10.5" cy="6.9" r="3.8"/></g><g fill="#FFB9D0"><circle cx="0" cy="0" r="5.7"/><circle cx="7.5" cy="-2.5" r="4.6"/><circle cx="-7.5" cy="1" r="4.8"/><circle cx="3.5" cy="5.5" r="4.4"/><circle cx="-3.5" cy="-5.5" r="4.2"/><circle cx="10.5" cy="3.5" r="3.7"/><circle cx="-10.5" cy="5.5" r="3.5"/></g><g fill="#FFD9E6"><circle cx="-3.2" cy="-3.6" r="3"/><circle cx="5" cy="-3.8" r="2.2"/></g></g></defs><rect width="96" height="64" fill="url(#japan-th-sky)"/><g transform="scale(.4)translate(-100 -20)"><path d="M112 104a10 10 0 0 1 19-4a8 8 0 0 1 13 6h-32z" fill="#fff" opacity=".85"/><path d="M-10 160Q40 128 92 146Q130 120 170 150L170 175H-10ZM320 160Q360 134 400 150L400 175H320Z" fill="#B8C8F2"/><g clip-path="url(#japan-th-f)" transform="matrix(1 0 0 1.1 0 -16.8)"><rect x="130" y="40" width="300" height="140" fill="#7896E6"/><path d="M284 40L330 40L440 180L300 180Q296 120 284 54Z" fill="#6683D8"/><path d="M230 40H340V88Q334 84 330 92Q324 86 318 98Q312 88 306 95Q300 86 293 101Q287 88 280 96Q273 86 266 99Q259 88 252 94Q246 86 240 92L230 92Z" fill="#fff"/><path d="M284 40H340V88Q334 84 330 92Q324 86 318 98Q312 88 306 95Q300 86 293 101Q290 94 287 92Q290 70 284 54Z" fill="#DFE8FB"/></g><path d="M232 107Q248 100 264 107Q287 99 310 109Q287 114 264 111Q248 114 232 107Z" fill="#fff" opacity=".8"/><path d="M-10 172Q60 140 130 156Q200 132 280 150Q340 138 400 152L400 260H-10Z" fill="#8BD45A"/><path d="M-10 186Q80 164 170 176Q270 160 400 176L400 260H-10Z" fill="#A5E07A"/><path d="M232 168Q228 152 242 150Q248 140 260 146Q272 144 274 156Q286 158 284 170Z" fill="#62B83C"/><g transform="translate(194 161)scale(1.08)"><path d="M-9 1H9L15 16H-15Z" fill="#E6DCCF"/><path d="M-11.5 7H11.5M-13.5 12H13.5" stroke="#CFC3B4" stroke-width="1"/><ellipse cx="0" cy="1" rx="40" ry="3" fill="#6FBF45"/><path d="M-26.6 -80H-20.6L-22.25 0H-29.75ZM20.6 -80H26.6L29.75 0H22.25Z" fill="#E8452C"/><path d="M-22.6 -80H-20.6L-22.25 0H-24.5ZM24.6 -80H26.6L29.75 0H27.5Z" fill="#C4361F"/><path d="M-44 -85.8H44V-80.6C38 -77.4 32 -76 24 -76H-24C-32 -76 -38 -77.4 -44 -80.6Z" fill="#E8452C"/><path d="M-44 -82.1C-38 -78.9 -32 -77.5 -24 -77.5H24C32 -77.5 38 -78.9 44 -82.1V-80.6C38 -77.4 32 -76 24 -76H-24C-32 -76 -38 -77.4 -44 -80.6Z" fill="#C4361F"/><path d="M-53 -96C-46 -89 -38 -87 -26 -86.4H26C38 -87 46 -89 53 -96L52.2 -90.6C45 -84.6 37 -81.6 26 -80.8H-26C-37 -81.6 -45 -84.6 -52.2 -90.6Z" fill="#38333F"/><rect x="-2.6" y="-76.5" width="5.2" height="13" fill="#E8452C"/><rect x="-4.2" y="-74.2" width="8.4" height="7.6" rx="1" fill="#38333F" stroke="#F2B544" stroke-width=".9"/><rect x="-35" y="-64" width="70" height="5.2" fill="#E8452C"/><rect x="-35" y="-60.3" width="70" height="1.5" fill="#C4361F"/><path d="M-30.5 -9H-21.5L-21.2 0H-30.8ZM21.5 -9H30.5L30.8 0H21.2Z" fill="#38333F"/><path d="M-30.9 -10.2H-21.1V-8.4H-30.9ZM21.1 -10.2H30.9V-8.4H21.1Z" fill="#5B5468"/></g><g fill="#7A5140"><rect x="134" y="150" width="4" height="18"/><rect x="254" y="148" width="4" height="20"/></g><use href="#japan-th-bl" transform="translate(136 146)scale(1.45)"/><use href="#japan-th-bl" transform="translate(256 144)scale(1.55)"/><g stroke="#8A5A45" stroke-linecap="round" fill="none"><path d="M92 46Q114 32 132 32T160 22" stroke-width="6"/></g><use href="#japan-th-bl" transform="translate(106 38)scale(1.8)"/><use href="#japan-th-bl" transform="translate(134 28)scale(1.4)"/><use href="#japan-th-bl" transform="translate(156 22)scale(0.9)"/><path d="M0 0C-5.6-2.4-6.4-8-2.6-10L0-8L2.6-10C6.4-8 5.6-2.4 0 0ZM0 0C.6-6.1 5.6-8.6 8.7-5.6L7.6-2.5L10.3-.6C9.6 3.6 4 4.6 0 0ZM0 0C5.9-1.3 9.9 2.7 8 6.6L4.7 6.5L3.8 9.6C-.5 10.2-3.1 5.2 0 0ZM0 0C3.1 5.2 .5 10.2-3.8 9.6L-4.7 6.5L-8 6.6C-9.9 2.7-5.9-1.3 0 0ZM0 0C-4 4.6-9.6 3.6-10.3-.6L-7.6-2.5L-8.7-5.6C-5.6-8.6-.6-6.1 0 0Z" transform="translate(112 32)scale(.7)" fill="#fff"/><circle cx="112" cy="32" r="1.5" fill="#FF7FA8"/><g fill="#FFB3CB"><use href="#japan-th-pp" transform="translate(126 76)rotate(125)scale(.85)"/><use href="#japan-th-pp" transform="translate(312 70)rotate(-60)scale(.85)"/><use href="#japan-th-pp" transform="translate(236 38)rotate(200)scale(.85)"/></g></g></svg>`,
+  bannerArt:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 72"><defs><path id="japan-th-bp" d="M0 0C-3.8-2-4-7.4-1.8-10L0-8.2L1.8-10C4-7.4 3.8-2 0 0Z"/><g id="japan-th-bb"><g fill="#FFB3C9"><circle cx="0" cy="1.4" r="6.2"/><circle cx="7.5" cy="-1.1" r="5"/><circle cx="-7.5" cy="2.4" r="5.2"/><circle cx="3.5" cy="6.9" r="4.8"/><circle cx="-3.5" cy="-4.1" r="4.6"/><circle cx="10.5" cy="4.9" r="4"/><circle cx="-10.5" cy="6.9" r="3.8"/></g><g fill="#FFCFDE"><circle cx="0" cy="0" r="5.7"/><circle cx="7.5" cy="-2.5" r="4.6"/><circle cx="-7.5" cy="1" r="4.8"/><circle cx="3.5" cy="5.5" r="4.4"/><circle cx="-3.5" cy="-5.5" r="4.2"/><circle cx="10.5" cy="3.5" r="3.7"/><circle cx="-10.5" cy="5.5" r="3.5"/></g><g fill="#FFE8EF"><circle cx="-3.2" cy="-3.6" r="3"/><circle cx="5" cy="-3.8" r="2.2"/></g></g></defs><path d="M50 64Q75 52 88 18Q94 14 100 17Q106 14 112 18Q125 52 138 64Z" fill="#fff" opacity=".32"/><path d="M88 18Q94 14 100 17Q106 14 112 18Q116 27 120 35Q116 32 113 36Q109 31 105 37Q100 31 95 37Q91 31 87 36Q84 32 80 35Q84 27 88 18Z" fill="#FFF6F0"/><path d="M72 48Q86 43 100 47Q114 42 130 48Q114 51 100 50Q86 53 72 48Z" fill="#fff" opacity=".5"/><path d="M8 70Q8 64 26 62Q54 56 84 60Q112 54 132 61Q139 64 135 70Z" fill="#A8280F"/><g fill="#FFF8F2"><path d="M32.6 31H37.2L36.6 63H31.6ZM50.8 31H55.4L56.4 63H51.4Z"/><rect x="26.5" y="37" width="35" height="3.4" rx=".6"/><rect x="42" y="29" width="4" height="8.5"/><rect x="28" y="27.4" width="32" height="3"/><path d="M21.5 19.6Q44 26 66.5 19.6L65.4 24.4Q44 30 22.6 24.4Z"/><rect x="30.6" y="60.4" width="7" height="3.6" rx=".6"/><rect x="50.4" y="60.4" width="7" height="3.6" rx=".6"/></g><path d="M22.4 21.4Q44 27.6 65.6 21.4" stroke="#FFD9CC" stroke-width="1" fill="none"/><use href="#japan-th-bb" transform="translate(20 61)scale(0.75)"/><use href="#japan-th-bb" transform="translate(70 61)scale(0.75)"/><use href="#japan-th-bb" transform="translate(122 60)scale(0.6)"/><g fill="#FFCFDE"><use href="#japan-th-bp" transform="translate(16 38)rotate(70)scale(.5)"/><use href="#japan-th-bp" transform="translate(74 20)rotate(-50)scale(.5)"/><use href="#japan-th-bp" transform="translate(128 24)rotate(-150)scale(.5)"/></g></svg>`,
+  deco:[{label:'Sakura branch', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><path id="japan-th-df" d="M0 0C-5.6-2.4-6.4-8-2.6-10L0-8L2.6-10C6.4-8 5.6-2.4 0 0ZM0 0C.6-6.1 5.6-8.6 8.7-5.6L7.6-2.5L10.3-.6C9.6 3.6 4 4.6 0 0ZM0 0C5.9-1.3 9.9 2.7 8 6.6L4.7 6.5L3.8 9.6C-.5 10.2-3.1 5.2 0 0ZM0 0C3.1 5.2 .5 10.2-3.8 9.6L-4.7 6.5L-8 6.6C-9.9 2.7-5.9-1.3 0 0ZM0 0C-4 4.6-9.6 3.6-10.3-.6L-7.6-2.5L-8.7-5.6C-5.6-8.6-.6-6.1 0 0Z"/><g id="japan-th-dc"><g fill="#F39BBB"><circle cx="0" cy="1.4" r="6.2"/><circle cx="7" cy="-0.6" r="5"/><circle cx="-7" cy="2.9" r="5"/><circle cx="3" cy="6.9" r="4.5"/><circle cx="-3" cy="-4.1" r="4.5"/></g><g fill="#FFB9D0"><circle cx="0" cy="0" r="5.7"/><circle cx="7" cy="-2" r="4.6"/><circle cx="-7" cy="1.5" r="4.6"/><circle cx="3" cy="5.5" r="4.1"/><circle cx="-3" cy="-5.5" r="4.1"/></g><circle cx="-3" cy="-3.4" r="2.6" fill="#FFD9E6"/></g></defs><g stroke="#8A5A45" stroke-linecap="round" fill="none"><path d="M3 46Q12 37 20 30T43 6" stroke-width="3.4"/><path d="M18 32Q27 32 34 39" stroke-width="2.4"/><path d="M27 23Q25 15 20 11" stroke-width="2"/></g><use href="#japan-th-dc" transform="translate(12 37)scale(0.65)"/><use href="#japan-th-dc" transform="translate(30 22)scale(0.8)"/><use href="#japan-th-dc" transform="translate(41 8)scale(0.5)"/><use href="#japan-th-dc" transform="translate(35 39)scale(0.55)"/><use href="#japan-th-dc" transform="translate(19 11)scale(0.45)"/><use href="#japan-th-df" transform="translate(29 20)scale(.52)" fill="#fff"/><circle cx="29" cy="20" r="1" fill="#FF7FA8"/><use href="#japan-th-df" transform="translate(12 36)rotate(20)scale(.44)" fill="#fff"/><circle cx="12" cy="36" r="0.8" fill="#FF7FA8"/><path d="M0 0C-3.8-2-4-7.4-1.8-10L0-8.2L1.8-10C4-7.4 3.8-2 0 0Z" fill="#F39BBB" transform="translate(4 25)rotate(-40)scale(.5)"/></svg>`},
+    {label:'Koinobori carp streamers', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M7.5 7V46" stroke="#8A5A45" stroke-width="2.4" stroke-linecap="round"/><path d="M7.5 1.6V8.4M4.1 5H10.9M5.1 2.6L9.9 7.4M9.9 2.6L5.1 7.4" stroke="#F2B544" stroke-width="1.3" stroke-linecap="round"/><circle cx="7.5" cy="5" r="1.3" fill="#FFC800"/><path d="M9 8Q24.5 5 36 12L43 7L40 14L43 21L36 16Q24.5 23 9 20Z" fill="#2E3C9E"/><path d="M18 11q2 3 0 6M23 10.5q2 3.5 0 7M28 10.5q2 3.5 0 7" stroke="#8E9EF0" stroke-width="1.3" fill="none" stroke-linecap="round"/><rect x="9" y="8" width="2.4" height="12" rx="1.2" fill="#fff"/><circle cx="14" cy="12.5" r="2.1" fill="#fff"/><circle cx="14.3" cy="12.5" r="1.1" fill="#2B2F33"/><path d="M9 25Q22 22 31 29L38 24L35 31L38 38L31 33Q22 40 9 37Z" fill="#EE4F36"/><path d="M18 28q2 3 0 6M23 27.5q2 3.5 0 7M28 27.5q2 3.5 0 7" stroke="#FFD2C8" stroke-width="1.3" fill="none" stroke-linecap="round"/><rect x="9" y="25" width="2.4" height="12" rx="1.2" fill="#fff"/><circle cx="14" cy="29.5" r="2.1" fill="#fff"/><circle cx="14.3" cy="29.5" r="1.1" fill="#2B2F33"/></svg>`},
+    {label:'Wagasa paper umbrella', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><g transform="rotate(-12 24 26)"><path d="M7.3 22.8L24 29M13.4 23.5L24 29M19.6 23.9L24 29M28.4 23.9L24 29M34.6 23.5L24 29M40.7 22.8L24 29" stroke="#C9A27E" stroke-width=".7"/><path d="M24 22V45" stroke="#8A5A45" stroke-width="2.2" stroke-linecap="round"/><rect x="22.6" y="36" width="2.8" height="9" rx="1.4" fill="#3F51C8"/><path d="M22.6 38.4H25.4M22.6 40.8H25.4M22.6 43.2H25.4" stroke="#AFC0FF" stroke-width=".6"/><path d="M24 7.6L2 22Q24 30 46 22Z" fill="#EE4F36"/><path d="M14.8 13.6Q24 15.3 33.2 13.6L36.3 15.6Q24 17.9 11.7 15.6Z" fill="#FFF4E4"/><path d="M24 7.6L6.4 22.7M24 7.6L10.8 23.3M24 7.6L15.2 23.7M24 7.6L19.6 23.9M24 7.6L24 24M24 7.6L28.4 23.9M24 7.6L32.8 23.7M24 7.6L37.2 23.3M24 7.6L41.6 22.7" stroke="#B7321F" stroke-width=".6" opacity=".65"/><path d="M2 22Q24 30 46 22" stroke="#B7321F" stroke-width=".9" fill="none"/><rect x="21.8" y="5.4" width="4.4" height="3.4" rx="1.2" fill="#3F51C8"/></g></svg>`},
+    {label:'Sensu folding fan', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M24 41L14.5 37.9M24 41L15.9 35.1M24 41L18.1 32.9M24 41L20.9 31.5M24 41L24 31M24 41L27.1 31.5M24 41L29.9 32.9M24 41L32.1 35.1M24 41L33.5 37.9" stroke="#B88A62" stroke-width="1.6" stroke-linecap="round"/><path d="M15.4 38.2L0.2 33.3A25 25 0 0 1 47.8 33.3L32.6 38.2A9 9 0 0 0 15.4 38.2Z" fill="#3F51C8"/><path d="M16.7 35.7L3.8 26.3A25 25 0 0 1 9.3 20.8L18.7 33.7A9 9 0 0 0 16.7 35.7ZM21.2 32.4L16.3 17.2A25 25 0 0 1 24 16L24 32A9 9 0 0 0 21.2 32.4ZM26.8 32.4L31.7 17.2A25 25 0 0 1 38.7 20.8L29.3 33.7A9 9 0 0 0 26.8 32.4ZM31.3 35.7L44.2 26.3A25 25 0 0 1 47.8 33.3L32.6 38.2A9 9 0 0 0 31.3 35.7Z" fill="#5568D6"/><path d="M1.4 32.8A24 24 0 0 1 46.6 32.8" stroke="#FFC800" stroke-width="1.6" fill="none"/><path d="M0 0C-5.6-2.4-6.4-8-2.6-10L0-8L2.6-10C6.4-8 5.6-2.4 0 0ZM0 0C.6-6.1 5.6-8.6 8.7-5.6L7.6-2.5L10.3-.6C9.6 3.6 4 4.6 0 0ZM0 0C5.9-1.3 9.9 2.7 8 6.6L4.7 6.5L3.8 9.6C-.5 10.2-3.1 5.2 0 0ZM0 0C3.1 5.2 .5 10.2-3.8 9.6L-4.7 6.5L-8 6.6C-9.9 2.7-5.9-1.3 0 0ZM0 0C-4 4.6-9.6 3.6-10.3-.6L-7.6-2.5L-8.7-5.6C-5.6-8.6-.6-6.1 0 0Z" transform="translate(17 25)scale(.46)rotate(-20)" fill="#FFB9D0"/><circle cx="17" cy="25" r="0.9" fill="#FF7FA8"/><path d="M0 0C-5.6-2.4-6.4-8-2.6-10L0-8L2.6-10C6.4-8 5.6-2.4 0 0ZM0 0C.6-6.1 5.6-8.6 8.7-5.6L7.6-2.5L10.3-.6C9.6 3.6 4 4.6 0 0ZM0 0C5.9-1.3 9.9 2.7 8 6.6L4.7 6.5L3.8 9.6C-.5 10.2-3.1 5.2 0 0ZM0 0C3.1 5.2 .5 10.2-3.8 9.6L-4.7 6.5L-8 6.6C-9.9 2.7-5.9-1.3 0 0ZM0 0C-4 4.6-9.6 3.6-10.3-.6L-7.6-2.5L-8.7-5.6C-5.6-8.6-.6-6.1 0 0Z" transform="translate(30 22)scale(.38)rotate(15)" fill="#FFD9E6"/><circle cx="30" cy="22" r="0.7" fill="#FF7FA8"/><circle cx="24" cy="41" r="2" fill="#FFC800"/></svg>`}],
+  trophy:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M24 3.5C36.5 3.5 42.5 14 42.5 26.5C42.5 38.5 35 44.5 24 44.5C13 44.5 5.5 38.5 5.5 26.5C5.5 14 11.5 3.5 24 3.5Z" fill="#E8402C" stroke="#FFF4E4" stroke-width="1.6"/><path d="M7.6 34Q24 46 40.4 34Q37.5 43.6 24 43.6Q10.5 43.6 7.6 34Z" fill="#B7321F"/><ellipse cx="24" cy="19.5" rx="12" ry="10.5" fill="#FCEDE0"/><path d="M14.6 13.6Q18.4 10.6 22 12.6M26 12.6Q29.6 10.6 33.4 13.6" stroke="#2B2F33" stroke-width="1.8" stroke-linecap="round" fill="none"/><circle cx="18.6" cy="19" r="3.7" fill="#fff" stroke="#E6D3C2" stroke-width=".6"/><circle cx="29.4" cy="19" r="3.7" fill="#fff" stroke="#E6D3C2" stroke-width=".6"/><circle cx="29.4" cy="19.1" r="3.1" fill="#2B2F33"/><circle cx="30.3" cy="18.2" r=".9" fill="#fff"/><path d="M18.5 25.2Q21.5 27.8 24 25.8Q26.5 27.8 29.5 25.2" stroke="#6B7378" stroke-width="1.5" stroke-linecap="round" fill="none"/><g fill="#FF9DB0" opacity=".55"><ellipse cx="14.8" cy="23.6" rx="2" ry="1.3"/><ellipse cx="33.2" cy="23.6" rx="2" ry="1.3"/></g><path d="M13 33.5Q24 39 35 33.5" stroke="#FFC800" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="24" cy="35" r="2.2" fill="#FFC800"/><ellipse cx="12.5" cy="12" rx="2" ry="3.6" fill="#fff" opacity=".3" transform="rotate(25 12.5 12)"/></svg>` };
+THEMES.korea = { name: 'Korea', accent:'#177A6C', accentDark:'#0F5A4F', accent2:'#8E1B5B', accent2Dark:'#651242', soft:'#E8F4EF', softDark:'#172826', ink:'#0E5A4F', inkDark:'#8FDCC8',
+  pattern:`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path d="M0 0L48 48M48 0L0 48" stroke="#000" stroke-width=".9" fill="none"/><g fill="#000"><ellipse cx="24" cy="19.2" rx="2.3" ry="3.4"/><ellipse cx="24" cy="28.8" rx="2.3" ry="3.4"/><ellipse cx="19.2" cy="24" rx="3.4" ry="2.3"/><ellipse cx="28.8" cy="24" rx="3.4" ry="2.3"/></g><circle cx="24" cy="24" r="1.3" fill="#000"/></svg>`,
+  pickArt:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 64" preserveAspectRatio="xMidYMid slice">
+<rect width="96" height="64" fill="#9FD8F6"/><rect y="30" width="96" height="24" fill="#C8EAFB"/>
+<g fill="#fff" opacity=".9"><path d="M8 14a5 5 0 0 1 9-2.6a4 4 0 0 1 6.5 2.6z"/><path d="M74 10a4 4 0 0 1 7.5-2a3.4 3.4 0 0 1 5.5 2z"/></g>
+<path d="M-4 44Q8 26 20 24Q30 22 40 34V52H-4Z" fill="#9FCBB6"/>
+<path d="M10 52C24 40 38 18 50 10C56 6 62 6 68 12C76 20 88 28 100 31V52Z" fill="#63B96D"/>
+<path d="M60 8C64 10 66 12 68 12C76 20 88 28 100 31V52H82Q78 26 60 8Z" fill="#54A961"/>
+<g fill="#8A5A43"><rect x="10" y="38" width="3" height="12" rx="1"/><rect x="84" y="40" width="3" height="10" rx="1"/></g>
+<g fill="#E39F1C"><circle cx="11.5" cy="31" r="8"/><circle cx="6" cy="37" r="6"/><circle cx="17" cy="37" r="6"/></g>
+<g fill="#F5BA33"><circle cx="10.5" cy="29.5" r="7.2"/><circle cx="5" cy="35.5" r="5.2"/><circle cx="16" cy="35.5" r="5.2"/></g>
+<g fill="#D0442A"><circle cx="86" cy="34" r="6.5"/><circle cx="80" cy="39" r="5"/><circle cx="91.5" cy="39" r="5.5"/></g>
+<g fill="#F0603F"><circle cx="85" cy="32.8" r="5.8"/><circle cx="79" cy="38" r="4.3"/><circle cx="90.5" cy="38" r="4.7"/></g>
+<rect y="54" width="96" height="10" fill="#E4E0D6"/><path d="M42 64L45 55H51L54 64Z" fill="#EEEAE2"/>
+<rect y="45" width="24" height="10" fill="#E8D7BF"/><rect x="72" y="45" width="24" height="10" fill="#E8D7BF"/>
+<g fill="#5B6472"><rect y="43" width="24" height="2.6"/><rect x="72" y="43" width="24" height="2.6"/></g>
+<rect x="23" y="40" width="50" height="15" fill="#E7E4DD"/><rect x="22" y="39" width="52" height="2" rx=".6" fill="#F2F0EB"/>
+<g stroke="#D6D1C6" stroke-width=".6"><path d="M23 45H73M23 50H73"/></g>
+<g fill="#5A3A32"><path d="M43 55V48A5 5 0 0 1 53 48V55Z"/><path d="M30 55V50.5A3.5 3.5 0 0 1 37 50.5V55Z"/><path d="M59 55V50.5A3.5 3.5 0 0 1 66 50.5V55Z"/></g>
+<g fill="#F3E3C6"><path d="M46.4 55V50A1.6 1.6 0 0 1 49.6 50V55Z"/></g>
+<rect x="33" y="35" width="30" height="4.4" fill="#5C3830"/><g fill="#BC4430"><rect x="33.5" y="35" width="1.6" height="4.4"/><rect x="42.2" y="35" width="1.6" height="4.4"/><rect x="52.2" y="35" width="1.6" height="4.4"/><rect x="61" y="35" width="1.6" height="4.4"/></g>
+<rect x="31" y="34.2" width="34" height="1.6" fill="#3DB5A2"/>
+<path d="M36 28.5H60Q66 33 77 31.5Q73 35.6 64 36Q48 37 32 36Q23 35.6 19 31.5Q30 33 36 28.5Z" fill="#4E5765"/>
+<path d="M19 31.5Q23 35.6 32 36Q48 37 64 36Q73 35.6 77 31.5" stroke="#A3ACB8" stroke-width="1" fill="none" stroke-linecap="round"/>
+<rect x="38" y="22" width="20" height="7" fill="#7D3329"/><g fill="#BC4430"><rect x="38.4" y="22" width="1.4" height="7"/><rect x="56.2" y="22" width="1.4" height="7"/></g>
+<rect x="44.6" y="23.6" width="6.8" height="3.6" rx=".4" fill="#2B2B2B" stroke="#E9B949" stroke-width=".6"/>
+<rect x="36" y="21" width="24" height="1.8" fill="#3DB5A2"/>
+<path d="M39 14.5H57Q62 20 71 18.6Q67.6 22.6 60 23Q48 23.8 36 23Q28.4 22.6 25 18.6Q34 20 39 14.5Z" fill="#4E5765"/>
+<path d="M25 18.6Q28.4 22.6 36 23Q48 23.8 60 23Q67.6 22.6 71 18.6" stroke="#A3ACB8" stroke-width="1" fill="none" stroke-linecap="round"/>
+<rect x="37.5" y="12.4" width="21" height="2.6" rx=".8" fill="#3B434F"/><path d="M37 15L37.3 10.8Q38.4 9.8 39.8 11V15ZM59 15L58.7 10.8Q57.6 9.8 56.2 11V15Z" fill="#3B434F"/>
+</svg>`,
+  bannerArt:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 72" overflow="visible">
+<path d="M2 88C24 64 58 28 82 12Q96 3 110 11C124 19 134 28 160 32V130H2Z" fill="#fff" opacity=".14"/>
+<path d="M-18 90Q12 54 42 48Q56 46 66 56V130H-18Z" fill="#fff" opacity=".1"/>
+<g transform="translate(27 31)"><g fill="#FFF4DE"><circle cx="-2" cy="1" r="4.2"/><circle cx="5" cy="-1.6" r="5.2"/><circle cx="11.6" cy="1.6" r="3.6"/><rect x="-2" y="1" width="13.6" height="4.2"/><path d="M-2 5.2Q-10 5.4-16 8.6Q-11 3.6-4 2.6Z"/></g><g fill="none" stroke="#177A6C" stroke-width="1.1" stroke-linecap="round"><path d="M5 1.6a2.4 2.4 0 1 1 2.4-2.6"/><path d="M-2 3.2a1.8 1.8 0 1 1 1.8-2"/><path d="M11.6 3.4a1.4 1.4 0 1 1 1.4-1.6"/></g></g><g transform="translate(37 11) scale(.62)" opacity=".8"><g fill="#FFF4DE"><circle cx="-2" cy="1" r="4.2"/><circle cx="5" cy="-1.6" r="5.2"/><circle cx="11.6" cy="1.6" r="3.6"/><rect x="-2" y="1" width="13.6" height="4.2"/><path d="M-2 5.2Q-10 5.4-16 8.6Q-11 3.6-4 2.6Z"/></g><g fill="none" stroke="#177A6C" stroke-width="1.1" stroke-linecap="round"><path d="M5 1.6a2.4 2.4 0 1 1 2.4-2.6"/><path d="M-2 3.2a1.8 1.8 0 1 1 1.8-2"/><path d="M11.6 3.4a1.4 1.4 0 1 1 1.4-1.6"/></g></g><g fill="#F5BA33"><g transform="translate(14 20) rotate(-24) scale(.78)"><path d="M0 0L-8-7Q-6.6-12.6-.6-11.8L0-8.4L.6-11.8Q6.6-12.6 8-7Z"/><path d="M0 0V4.6" stroke="#F5BA33" stroke-width="1.2" stroke-linecap="round"/></g></g>
+<g transform="translate(-6.9 -5.8) scale(1.08)"><rect x="56" y="54" width="68" height="70" fill="#FFF4DE"/><rect x="54" y="52.4" width="72" height="2.8" rx=".8" fill="#fff"/>
+<g fill="#0F5A4F"><path d="M84 124V61A6 6 0 0 1 96 61V124Z"/><path d="M66 124V64.6A4.2 4.2 0 0 1 74.4 64.6V124Z"/><path d="M105.6 124V64.6A4.2 4.2 0 0 1 114 64.6V124Z"/></g>
+<rect x="66" y="47" width="48" height="6" fill="#FFF4DE" opacity=".4"/><g fill="#FFF4DE"><rect x="66" y="47" width="2.2" height="6"/><rect x="79" y="47" width="2.2" height="6"/><rect x="98.8" y="47" width="2.2" height="6"/><rect x="111.8" y="47" width="2.2" height="6"/></g>
+<rect x="62" y="45.6" width="56" height="2.2" fill="#F5BA33"/>
+<path d="M67 39H113Q120 45.4 134 43Q128 48.8 118 49.6Q90 51 62 49.6Q52 48.8 46 43Q60 45.4 67 39Z" fill="#FFF4DE"/>
+<rect x="73" y="30" width="34" height="8.4" fill="#FFF4DE" opacity=".4"/><g fill="#FFF4DE"><rect x="73" y="30" width="2.2" height="8.4"/><rect x="104.8" y="30" width="2.2" height="8.4"/></g>
+<rect x="85" y="31.4" width="10" height="5" rx=".6" fill="#0F5A4F" stroke="#F5BA33" stroke-width="1"/>
+<rect x="70" y="28.6" width="40" height="2.2" fill="#F5BA33"/>
+<path d="M74 21H106Q114 27.2 128 25.4Q122 30.6 110 31.2Q90 32.2 70 31.2Q58 30.6 52 25.4Q66 27.2 74 21Z" fill="#FFF4DE"/>
+<rect x="72" y="18.4" width="36" height="3.4" rx="1" fill="#fff"/><path d="M71.4 21.8V16.4L75.6 18.6V21.8ZM108.6 21.8V16.4L104.4 18.6V21.8Z" fill="#fff"/></g>
+</svg>`,
+  deco:[
+    {label:'Cheongsachorong, a blue-and-red silk lantern on a carrying pole', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M5 11.4L43 3.4" stroke="#8A5A43" stroke-width="2.2" stroke-linecap="round"/><circle cx="24" cy="7.4" r="1.5" fill="none" stroke="#5B6472" stroke-width="1"/><path d="M24 8.9V10.6" stroke="#5B6472" stroke-width="1"/><rect x="21.6" y="9.8" width="4.8" height="1.8" rx=".6" fill="#F5BA33"/><path d="M17.6 11.4H30.4L33.4 17.6H14.6Z" fill="#2F62B3"/><path d="M21.8 11.4H26.2L27.4 17.6H20.6Z" fill="#3E76CB"/><rect x="16" y="17.6" width="16" height="14.8" fill="#D23F31"/><rect x="20.6" y="17.6" width="6.8" height="14.8" fill="#E85A45"/><path d="M16 32.4H32V38H16Z" fill="#2F62B3"/><path d="M20.6 32.4H27.4V38H20.6Z" fill="#3E76CB"/><path d="M16.6 38H31.4L30.4 39.6H17.6Z" fill="#8A5A43"/><rect x="22.6" y="39.6" width="2.8" height="1.8" rx=".6" fill="#F5BA33"/></svg>`},
+    {label:'Ginkgo twig, the tree of Seoul', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M6 44Q17 34 24 27Q30 21 36 14" stroke="#8A5A43" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M24 27L21 21M30 21L35 24M15 36.4L13 35" stroke="#8A5A43" stroke-width="1.4" stroke-linecap="round"/><g fill="#F5BA33"><path transform="translate(34 15) rotate(35) scale(.9)" d="M0-2L-9.4-10Q-8-16.6-.7-15.4L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(21 21) rotate(-30) scale(.9)" d="M0-2L-9.4-10Q-8-16.6-.7-15.4L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(35 24) rotate(110) scale(.8)" d="M0-2L-9.4-10Q-8-16.6-.7-15.4L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(13 35) rotate(-70) scale(.75)" d="M0-2L-9.4-10Q-8-16.6-.7-15.4L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/></g><g fill="#E39F1C"><path transform="translate(34 15) rotate(35) scale(.9)" d="M0-2L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(21 21) rotate(-30) scale(.9)" d="M0-2L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(35 24) rotate(110) scale(.8)" d="M0-2L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/><path transform="translate(13 35) rotate(-70) scale(.75)" d="M0-2L0-11.2L.7-15.4Q8-16.6 9.4-10Z"/></g></svg>`},
+    {label:'Kkachi, a magpie that brings good news', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M4 42Q16 38 28 38" stroke="#8A5A43" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M23 33L42 40L44 37L26 29Z" fill="#26344A"/><path d="M24 31.5L41 37.8" stroke="#3A86B5" stroke-width="1.4"/><path d="M10 17Q10 10 16 10Q21 10 22 15L28 24Q30 30 24 33Q16 35 13 28Q12 24 13 21L9 19Z" fill="#26344A"/><path d="M15 23Q18 31 24 32Q28 30 27 25Q22 26 15 23Z" fill="#fff"/><path d="M17 17Q24 17 28 25Q22 25 18 21Z" fill="#3A86B5"/><path d="M19 19Q23 20 25.5 23" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M10 16.6L5.6 18L10 19Z" fill="#26344A"/><circle cx="14" cy="14.4" r="1.2" fill="#fff"/><path d="M20 33V38M23 33V38" stroke="#26344A" stroke-width="1.2"/></svg>`},
+    {label:'Goryeo celadon maebyeong with an inlaid crane and clouds', svg:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M20.6 7.6Q11.6 9.6 11.4 17Q11.2 27 18.4 38.6L17.4 44H30.6L29.6 38.6Q36.8 27 36.6 17Q36.4 9.6 27.4 7.6Z" fill="#8FC2AE"/><path d="M27.4 7.6Q36.4 9.6 36.6 17Q36.8 27 29.6 38.6L30.6 44H26.4L26.2 38.6Q32.4 27 32.2 17.6Q32 10.6 26.2 8.2Z" fill="#74AD96"/><rect x="20" y="3.6" width="8" height="4.4" rx="1" fill="#74AD96"/><path d="M12.4 13.6Q24 16 35.6 13.6M18.2 38.4Q24 39.6 29.8 38.4" stroke="#5B917B" stroke-width="1" fill="none"/><g transform="translate(24.4 25.6) rotate(-38) scale(.86)" fill="#fff"><ellipse rx="3.2" ry="1.6"/><path d="M-1.8-1L-3-9.8L-1.4-9L-.2-10L.8-8.6L2.2-9L2.6-1Z"/><path d="M-.6.8L1.8 6L2.8 1.2Z" opacity=".85"/><path d="M3-.6L5.4-.2L3.2 1Z"/><circle cx="-8.2" cy="-3.4" r="1.2"/><path d="M-2.6-.6Q-5.6-1.4-7.8-3.1M-9.2-3.7L-11.4-4.4M2.8.8L8.8 3.2" stroke="#fff" stroke-width="1.1" stroke-linecap="round" fill="none"/><circle cx="-8.3" cy="-3.7" r=".45" fill="#3B5F52"/></g><g fill="none" stroke="#5B917B" stroke-width=".9" stroke-linecap="round"><path d="M28.6 18.4c.4-1.6 2.4-2 3-.6c.4 1-.6 1.6-1.2 1"/><path d="M14.4 30.2c.4-1.6 2.4-2 3-.6c.4 1-.6 1.6-1.2 1"/><path d="M29.6 31.6c.4-1.6 2.4-2 3-.6c.4 1-.6 1.6-1.2 1"/></g></svg>`}
+  ],
+  trophy:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><g transform="translate(0 -1.6)"><path d="M15.6 19.2Q7 26 8.5 33Q10.5 41.5 24 41.5Q37.5 41.5 39.5 33Q41 26 32.4 19.2Z" fill="#FFC83D"/><path d="M32.4 19.2Q41 26 39.5 33Q37.5 41.5 24 41.5Q34 39 35 31Q35.6 24 29.4 19.2Z" fill="#E8A317"/><path d="M18.4 19.4L15.4 14.4Q16.8 12.6 18.8 13.6Q20.2 11.8 21.8 13.2Q23 11.6 24 13Q25 11.6 26.2 13.2Q27.8 11.8 29.2 13.6Q31.2 12.6 32.6 14.4L29.6 19.4Z" fill="#FFD966"/><path d="M24 13Q25.6 16.6 29.6 19.4L32.6 14.4Q31.2 12.6 29.2 13.6Q27.8 11.8 26.2 13.2Q25 11.6 24 13Z" fill="#F7C64A"/><path d="M15.6 19.2H32.4" stroke="#26A592" stroke-width="3" stroke-linecap="round"/><path d="M15.6 19.2Q10.6 16.4 11 21.4Q11.8 23.4 14.6 20.6M32.4 19.2Q37.4 16.4 37 21.4Q36.2 23.4 33.4 20.6" stroke="#26A592" stroke-width="1.8" fill="none" stroke-linecap="round"/><g fill="#26A592"><path d="M10.4 22.6L12 24.2L10.4 25.8L8.8 24.2Z"/><path d="M37.6 22.6L39.2 24.2L37.6 25.8L36 24.2Z"/><path d="M9.6 25.6H11.2L12.2 31.6H8.6Z"/><path d="M36.8 25.6H38.4L39.4 31.6H35.8Z"/></g><g fill="#fff"><ellipse cx="24" cy="27.4" rx="2.2" ry="3.2"/><ellipse cx="24" cy="35" rx="2.2" ry="3.2"/><ellipse cx="20.2" cy="31.2" rx="3.2" ry="2.2"/><ellipse cx="27.8" cy="31.2" rx="3.2" ry="2.2"/></g><circle cx="24" cy="31.2" r="1.6" fill="#26A592"/></g></svg>` };
+
+/* Country themes: applied to the whole screen once a destination is picked. */
+const themeKey = () => S.picked ? sceneKey() : null;
+const TH = () => THEMES[themeKey()] || null;
+const patURL = svg => `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+function applyTheme(){ const t = TH(), el = $('screen'); el.classList.toggle('themed', !!t);
+  const set = (n, v) => v ? el.style.setProperty(n, v) : el.style.removeProperty(n);
+  set('--th', t && t.accent); set('--th-d', t && t.accentDark); set('--th2', t && t.accent2); set('--th2-d', t && t.accent2Dark);
+  set('--th-soft-l', t && t.soft); set('--th-soft-dk', t && t.softDark); set('--th-ink-l', t && t.ink); set('--th-ink-dk', t && t.inkDark);
+  set('--th-pat', t && patURL(t.pattern)); }
+const curOutfit = () => S.picked ? SCENES[sceneKey()].outfit : {};
+function destCards(){ return `<div class="dests">${Object.keys(DEST).map(d => { const k = d === 'Tokyo' ? 'japan' : 'korea', t = THEMES[k], on = S.picked && S.dest === d;
+  return `<button type="button" class="destbtn${on ? ' on' : ''}" aria-pressed="${on}" data-act="dest" data-v="${d}" style="--b:${t.accent};--bd:${t.accentDark};--bs-l:${t.soft};--bs-dk:${t.softDark};--bi-l:${t.ink};--bi-dk:${t.inkDark};--bp:${patURL(t.pattern)}">
+    <span class="dart">${t.pickArt}</span><span class="dtx"><b>${DEST[d].flag} ${DEST[d].country}</b><small>${d}</small></span>${on ? '<span class="dtick" aria-hidden="true">✓</span>' : ''}</button>`; }).join('')}</div>`; }
+
+/* Status bar glyphs: Lucide (ISC licence, lucide.dev). Everything else in the app uses emoji. */
+const ICONS = {"signal": "<path d=\"M2 20h.01\" /> <path d=\"M7 20v-4\" /> <path d=\"M12 20v-8\" /> <path d=\"M17 20V8\" /> <path d=\"M22 4v16\" />", "wifi": "<path d=\"M12 20h.01\" /> <path d=\"M2 8.82a15 15 0 0 1 20 0\" /> <path d=\"M5 12.859a10 10 0 0 1 14 0\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" />", "battery-full": "<rect width=\"16\" height=\"10\" x=\"2\" y=\"7\" rx=\"2\" ry=\"2\" /> <line x1=\"22\" x2=\"22\" y1=\"11\" y2=\"13\" /> <line x1=\"6\" x2=\"6\" y1=\"11\" y2=\"13\" /> <line x1=\"10\" x2=\"10\" y1=\"11\" y2=\"13\" /> <line x1=\"14\" x2=\"14\" y1=\"11\" y2=\"13\" />", "plane": "<path d=\"M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z\" />"};
+function svgIc(name, size = 22){ return `<svg class="ico" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`; }
+const EMOJI = {'plane-landing':'🛬','train-front':'🚆','utensils':'🍜','torii-gate':'⛩️','landmark':'🛕','bed-double':'🏮','shopping-bag':'🛍️','siren':'🆘','check':'✓','medal':'🏅','trophy':'🏆','book-open':'📖','phone-call':'📞','languages':'🗣️','users':'👥','download':'✈️','lock':'🔒','volume-2':'▶','heart':'❤️','flame':'🔥','gem':'💎','zap':'⚡','target':'🎯','timer':'⏱','wifi-off':'✈','wifi':'📶','lightbulb':'💡','mic':'🎤','calendar-days':'🗓','map-pin':'📍','house':'🏠'};
+function ic(name, size = 22){ return `<span class="emo" style="font-size:${Math.round(size*.9)}px" aria-hidden="true">${EMOJI[name] || name}</span>`; }
+const flagSvg = c => c === 'jp' ? '🇯🇵' : '🇰🇷';
+const EMO = {'🚕':'car-taxi-front','🗑️':'trash-2','📸':'camera','🚉':'train-front','🧳':'luggage','📱':'smartphone','🚶':'arrow-up-down','🍡':'croissant','💴':'banknote','🍢':'beer','🐟':'fish','⛩️':'torii-gate','💧':'droplets','🏮':'hotel','👘':'shirt','♨️':'waves','🛍️':'wallet','🚑':'ambulance','🙇':'handshake','🎂':'cake','☎️':'phone-call','🚇':'armchair','🧓':'accessibility','🚌':'bus','🍶':'wine','🍚':'soup','🥢':'utensils-crossed','🔔':'bell-ring','🛕':'landmark','🏘️':'moon','👟':'footprints','💳':'hand-coins'};
+const sceneIc = (q, size = 36) => `<span class="emo" style="font-size:${size}px" aria-hidden="true">${q.em}</span>`;
+const DEST = {
+  Tokyo:{flag:flagSvg('jp'), country:'Japan', lang:'Japanese', voice:'ja-JP', host:'Aiko', hostCity:'Kyoto', sacred:'torii-gate', stay:'🏮', food:{beg:'🍱', int:'🍣'}},
+  Seoul:{flag:flagSvg('kr'), country:'Korea', lang:'Korean', voice:'ko-KR', host:'Min-jun', hostCity:'Seoul', sacred:'🪷', stay:'🏠', food:{beg:'🍲', int:'🥟'}}
+};
+const MOMENTS = {arrive:['Arrival & streets','plane-landing'], move:['Getting around','train-front'], eat:['Eating & drinking','utensils'], sacred:['Temples & heritage',null], stay:['Where you stay',null], shop:['Shopping','shopping-bag'], emerg:['Emergencies','siren']};
+const ORDER_FULL = ['arrive','move','eat','sacred','stay','shop','emerg'];
+const ORDER_CRASH = ['arrive','emerg','eat','move','stay','sacred','shop'];
+const SEV = {1:['Minor slip','●○○'], 2:['Noticeable','●●○'], 3:['Serious','●●●']};
+const SRC = {
+  JTA:'Source: Japan Tourism Agency, "Travel Etiquette for the Future" and Tourism Pictograms (Nov 2024)',
+  JP:'Source: Japanese travel etiquette guides',
+  KR:'Source: Korean travel etiquette guides',
+  KTO:'Source: Korea Tourism Organization, 1330 Korea Travel Hotline'
+};
+
+/* Culture Quest content. o = [choice, correct, local face, local reaction]. sev = how serious the usual mistake is. check = in the 60-second trip-ready check. */
+const QUEST = {
+Tokyo:[
+ {m:'arrive',sev:1,em:'🚕',place:'Taxi rank, Narita Airport',q:'Your taxi pulls up. What do you do with the back door?',
+  o:[['Pull it open myself',0,'😅','The driver winces as the door fights its motor.'],['Wait, the driver opens it for me',1,'😊','The door swings open by itself. “Dōzo!”'],['Slam it shut hard once I’m in',0,'😬','The driver flinches. It would have closed on its own.']],
+  why:'Most Japanese taxis have rear doors the driver opens and closes for you. Let them, and get in on the left.',src:'JP'},
+ {m:'arrive',sev:2,check:1,em:'🗑️',place:'Shibuya, after a konbini coffee',q:'Your cup is empty and there are no bins on the street. What do you do?',
+  o:[['Leave it neatly on a wall ledge',0,'😟','Later, a shop owner has to clear it away.'],['Drop it in the nearest bicycle basket',0,'😠','The bike’s owner finds your rubbish.'],['Carry it to a konbini or station bin, or back to my hotel',1,'😊','The street stays spotless. A local gives you a small nod.']],
+  why:'Public bins are rare in Japan. “Dispose of trash responsibly” is one of the seven points in the national etiquette guide, so keep rubbish until you find a proper bin.',src:'JTA'},
+ {m:'arrive',sev:3,em:'📸',place:'A lane in Gion, Kyoto',q:'A maiko in kimono hurries past on her way to an appointment. Your camera is ready.',
+  o:[['Follow her for a close-up',0,'😣','She speeds up and looks away. Residents complain about exactly this.'],['Let her pass and keep my camera down',1,'🙇','She passes with a small bow. The lane stays calm.'],['Step in front and ask for a quick selfie',0,'😥','You block the lane and she has to stop.']],
+  why:'The national guidance asks travellers not to photograph people without permission. In parts of Gion, residents have put up signs banning photos on private lanes.',src:'JTA'},
+ {m:'move',sev:2,check:1,em:'🚉',place:'Shinjuku Station platform',q:'Your train is pulling in. Where do you stand?',
+  o:[['In the line at the floor markings, then let everyone off first',1,'😌','The line moves smoothly and you still get a seat.'],['Right in front of the doors so I get on first',0,'😤','People getting off have to push past you.'],['Slip in beside the front of the line',0,'😒','A sharp look. That counts as cutting in.']],
+  why:'Cutting in line is one of the behaviours shown in the Tourism Pictograms. Platforms have painted markings that show where to queue.',src:'JTA'},
+ {m:'move',sev:2,em:'🧳',place:'Shinkansen, Tokyo to Kyoto',q:'You have two large suitcases. How do you handle them?',
+  o:[['Put them in the aisle beside my seat',0,'😖','The trolley can’t get through and a passenger trips.'],['Stand them in the area by the doors',0,'😓','They block people getting off at Nagoya.'],['Book an oversized-luggage seat, or send them ahead with a delivery service',1,'😊','You ride light, and your bags meet you at the hotel.']],
+  why:'“Travel smart and travel light” asks visitors not to take large luggage into crowded spaces. On the Tokaido Shinkansen, very large bags need a reserved oversized-luggage seat.',src:'JTA'},
+ {m:'move',sev:2,em:'📱',place:'Yamanote Line, evening rush',q:'Your phone rings on a quiet train.',
+  o:[['Answer softly and keep it short',0,'🤨','Heads turn. Even a soft call stands out in a silent carriage.'],['Decline, text back and switch to silent (“manner mode”)',1,'😌','The carriage stays quiet. Nobody even looks up.'],['Put it on speaker so my hands are free',0,'😠','A passenger points at the “no calls” sticker.']],
+  why:'On Japanese trains, calls wait until you get off and phones go on silent. Keeping your voice low is part of “mind your manners while there”.',src:'JP'},
+ {m:'move',sev:1,em:'🚶',place:'Escalator at Tokyo Station',q:'You want to stand still on the escalator. Where do you stand?',
+  o:[['On the left, leaving the right side for walkers',1,'🙂','You blend right in with the commuters.'],['On the right, like in Osaka',0,'😅','A commuter is stuck behind you. In Tokyo that’s the walking side.'],['In the middle, with my suitcase beside me',0,'😤','Nobody can pass on either side.']],
+  why:'Tokyo stands on the left and Osaka on the right. Many rail companies now ask everyone to stand still on both sides for safety, so follow the signs where you see them.',src:'JP'},
+ {m:'eat',sev:2,em:'🍡',place:'Nakamise Street, Asakusa',q:'You just bought a hot melon pan on a packed shopping street. Where do you eat it?',
+  o:[['Walk and eat while I browse',0,'😬','A shopper squeezes past and crumbs land on the lane.'],['Stand beside the stall and finish it there',1,'😊','The vendor smiles and hands you a napkin. “Dōzo!”'],['Sit on the temple steps to eat',0,'🙅','A temple volunteer gently waves you off the steps.']],
+  why:'Eating while walking is one of the behaviours the Tourism Pictograms ask visitors to avoid in crowded areas. Many stalls expect you to eat on the spot.',src:'JTA'},
+ {m:'eat',sev:1,em:'💴',place:'Ramen shop, Shibuya',q:'The ramen was great. How do you thank the staff?',
+  o:[['Leave a 15% tip on the counter',0,'😟','The cook chases you down the street to return your money.'],['Say “gochisōsama deshita” as I leave',1,'😄','The kitchen calls back “Arigatō gozaimashita!”'],['Wave the cook over and hand them cash',0,'😳','He politely refuses. Tips aren’t part of the culture.']],
+  why:'Tipping isn’t expected in Japan and can cause awkwardness. “Gochisōsama deshita” (thank you for the meal) is the thanks staff appreciate.',src:'JP'},
+ {m:'eat',sev:1,em:'🍢',place:'Izakaya in Shinjuku',q:'A small dish you didn’t order arrives, and the bill shows a table charge.',
+  o:[['Enjoy it. It’s the otoshi, a cover charge with a starter',1,'😊','The owner tops up your edamame with a grin.'],['Send it back and refuse to pay',0,'😠','The mood sours. The charge is standard.'],['Tell the staff it’s a scam',0,'😣','The staff are embarrassed. Otoshi is normal at most izakaya.']],
+  why:'Many izakaya serve a small starter (otoshi) with a per-person table charge of a few hundred yen. It is normal, not a scam.',src:'JP'},
+ {m:'eat',sev:3,check:1,em:'🐟',place:'Dinner with friends, Osaka',q:'Your friend wants to try a piece of your grilled fish. How do you pass it?',
+  o:[['From my chopsticks straight to theirs',0,'😨','Everyone freezes. That gesture belongs to a funeral rite.'],['Place it on their plate, or let them take it from mine',1,'😋','“Meccha oishii!” Your friend loves it.'],['Spear it with one chopstick and hold it out',0,'😬','Your friend laughs nervously. Spearing food is bad manners too.']],
+  why:'Passing food chopstick to chopstick mirrors how family members pass cremated bones at Japanese funerals. Put food on a plate instead.',src:'JP'},
+ {m:'sacred',sev:2,em:'⛩️',place:'Meiji Jingu, main hall',q:'You reach the offering box at a Shinto shrine. How do you pray?',
+  o:[['Bow twice, clap twice, pray, then bow once',1,'🙏','A local beside you smiles and nods.'],['Clap loudly again and again, like at a festival',0,'😳','Heads turn. This is a place of quiet prayer.'],['Skip the prayer and take a selfie with the bell rope',0,'😒','An attendant gestures for you to step aside.']],
+  why:'At most Shinto shrines the routine is two bows, two claps, a silent prayer and one bow. At Buddhist temples you don’t clap. Walk to the side of the main path, as the centre is traditionally for the deity.',src:'JP'},
+ {m:'sacred',sev:2,em:'💧',place:'Water basin at a shrine gate',q:'You stop at the stone water basin by the entrance. What do you do?',
+  o:[['Drink straight from the ladle',0,'😧','A priest hurries over. The ladle never touches your lips.'],['Rinse my left hand, right hand, then my mouth from my cupped palm',1,'😌','You are purified and ready to enter.'],['Skip it and splash my face in the basin',0,'😬','Splashing in the basin is a real faux pas.']],
+  why:'The temizuya basin is for a short purification. Rinse each hand, pour a little water into your palm to rinse your mouth, and never drink from the ladle.',src:'JP'},
+ {m:'stay',sev:2,em:'🏮',place:'A ryokan in Hakone',q:'You arrive at a traditional inn. What do you do first?',
+  o:[['Keep my shoes on until I reach my room',0,'😳','Staff hurry over with slippers, worried about the tatami.'],['Take my shoes off at the entrance and step up',1,'🙇','“Irasshaimase!” Staff line up your shoes for you.'],['Ask staff to carry my shoes to the room',0,'🤔','Puzzled looks. Shoes stay at the entrance.']],
+  why:'Shoes come off at the genkan, the entrance below the raised floor. Slippers are for corridors and come off again before tatami.',src:'JP'},
+ {m:'stay',sev:3,em:'👘',place:'Your room at the ryokan',q:'You put on the cotton yukata the inn provides. How do you wrap it?',
+  o:[['Right side over left',0,'😨','The attendant gently stops you. That’s how the dead are dressed.'],['Left side over right',1,'😊','You look ready for dinner in the hall.'],['Whichever feels comfy',0,'😬','It matters. One way is only for funerals.']],
+  why:'Always wrap the left panel over the right, so it sits on top. Right over left is reserved for dressing the deceased.',src:'JP'},
+ {m:'stay',sev:3,check:1,em:'♨️',place:'Hot spring bath',q:'You are about to get into the onsen. What comes first?',
+  o:[['Get straight in, the hot water will clean me',0,'😧','A bather frowns and glances at the shower stools.'],['Wear my swimsuit and bring my towel into the water',0,'🙅','Staff ask you to remove the swimsuit. Most onsen don’t allow swimwear.'],['Wash at the shower stools first, and keep my towel out of the water',1,'😊','The regulars shift over to make room for you.']],
+  why:'Bathers wash fully before entering the shared bath, and towels stay out of the water. Some baths also have rules on tattoos, so check before you go.',src:'JP'},
+ {m:'shop',sev:1,em:'🛍️',place:'Drugstore, Shinsaibashi',q:'There’s a small tray on the counter as you pay.',
+  o:[['Put my cash or card in the tray',1,'😊','The cashier counts your change back with a bow.'],['Hand the cash into the cashier’s palm',0,'🙂','They take it, but the tray was there for a reason.'],['Toss the notes on the counter',0,'😠','The cashier stiffens. It looks careless.']],
+  why:'Many shops use a cash tray so money is placed down and counted openly. Use it, and offer cards with both hands.',src:'JP'},
+ {m:'emerg',sev:3,check:1,em:'🚑',place:'A street in Osaka',q:'Someone collapses on the pavement. Which number do you call for an ambulance?',
+  o:[['911',0,'😰','No answer. 911 doesn’t work in Japan.'],['110',0,'😟','That’s the police. They’ll help, but you’ve lost time.'],['119',1,'😮‍💨','An ambulance is on its way.']],
+  why:'In Japan call 119 for an ambulance or fire and 110 for the police. JNTO’s Japan Visitor Hotline also helps in English, day and night.',src:'JP'}
+],
+Seoul:[
+ {m:'arrive',sev:1,em:'🙇',place:'Meeting your host in Bukchon',q:'Your hanok host, in her sixties, greets you at the gate.',
+  o:[['Go in for a big hug',0,'😳','She steps back, startled.'],['Offer a high five',0,'😅','She laughs, but it’s awkward.'],['Bow slightly and say “안녕하세요”',1,'😊','She bows back and hands you a cup of barley tea.']],
+  why:'A slight bow with a greeting is the standard way to greet someone older. Hugs between new acquaintances are uncommon.',src:'KR'},
+ {m:'arrive',sev:1,em:'🎂',place:'Meeting your tour group, Hongdae',q:'A new Korean friend asks how old you are within a minute of meeting.',
+  o:[['Tell them. It helps them choose how to speak to me',1,'😄','“I’m older, so call me unni!” You’re friends already.'],['Refuse, it’s too personal',0,'😕','They look confused. They were being polite.'],['Make up a number as a joke',0,'😅','They believe you and use the wrong titles all day.']],
+  why:'Age shapes speech levels and titles in Korea, so asking early is normal and friendly. Korea now uses international age officially.',src:'KR'},
+ {m:'arrive',sev:1,em:'☎️',place:'Lost in Insadong',q:'Your phone translator can’t explain where you want to go. What do you do?',
+  o:[['Call 1330, the Korea Travel Hotline',1,'😌','An English-speaking operator talks you and the driver through it.'],['Repeat myself louder in English',0,'😣','The shopkeeper backs away, flustered.'],['Give up and go back to the hotel',0,'😔','You miss the tea house you came for.']],
+  why:'1330 is the Korea Tourism Organization’s travel hotline. It runs around the clock in English and other languages, and can interpret for you.',src:'KTO'},
+ {m:'move',sev:2,check:1,em:'🚇',place:'Seoul Metro, Line 2',q:'The only empty seat is a pink one. Do you take it?',
+  o:[['Leave it free, it’s for pregnant passengers',1,'🤰','A pregnant passenger boards and sits with a grateful smile.'],['Sit, and move if a pregnant woman gets on',0,'😟','She may not ask. She ends up standing by the door.'],['Sit. The rule is only for locals',0,'😑','Other passengers stare. The rule applies to everyone.']],
+  why:'Pink seats on Seoul’s metro are set aside for pregnant passengers, who may not look pregnant yet. Leave them empty even when the train is busy.',src:'KR'},
+ {m:'move',sev:2,em:'🧓',place:'Seoul Metro, end of the carriage',q:'The seats at the end of the carriage are empty and you’re tired.',
+  o:[['Sit. Nobody is using them',0,'😑','An older man boards and looks pointedly at you.'],['Leave them for older, disabled and pregnant passengers',1,'👵','A grandmother sits down and offers you a tangerine.'],['Put my shopping bags on them',0,'😠','Passengers tut. Those seats are reserved.']],
+  why:'Priority seats at the ends of each carriage are for older, disabled and pregnant passengers. Younger people usually leave them empty even when the train is full.',src:'KR'},
+ {m:'move',sev:1,em:'🚌',place:'City bus, Busan',q:'You tapped your T-money card when you got on. Now you’re getting off.',
+  o:[['Tap the card again at the back door',1,'😊','“Hwanseung imnida.” Your next ride counts as a transfer.'],['Just hop off',0,'😕','You lose the transfer discount on your next ride.'],['Pay the driver cash on the way out',0,'🤔','The driver waves you off. You already paid.']],
+  why:'Tap your card when you get off buses too. It sets your fare and gives you a free or cheap transfer within about 30 minutes.',src:'KR'},
+ {m:'eat',sev:2,check:1,em:'🍶',place:'Dinner with a friend’s parents, Mapo',q:'Your friend’s father offers to pour you soju. How do you take it?',
+  o:[['Hold my glass with one hand and keep chatting',0,'😐','He pauses. Your friend whispers, “Two hands.”'],['Hold the glass with both hands, then turn slightly away to drink',1,'😄','He laughs. “잘 마시네!” (You can drink!)'],['Wave him off and pour my own',0,'😬','Your friend winces. Pouring your own looks odd here.']],
+  why:'When someone older pours for you, hold the glass with two hands. Turning slightly away from elders as you drink is a common courtesy. Pour for others, and let them pour for you.',src:'KR'},
+ {m:'eat',sev:2,em:'🍚',place:'Family dinner table',q:'The food has arrived and everyone is seated. When do you start eating?',
+  o:[['Straight away, while it’s hot',0,'😶','The table goes quiet. Grandma hasn’t picked up her spoon.'],['After the eldest person starts',1,'😊','Grandma smiles and puts the best galbi on your plate.'],['Serve myself the best piece first',0,'😳','Your friend’s mum laughs nervously.']],
+  why:'At a Korean table the eldest person is served first and starts first. Everyone else follows.',src:'KR'},
+ {m:'eat',sev:3,check:1,em:'🥢',place:'Lunch at a gukbap restaurant',q:'You pause mid-meal. Where do your chopsticks go?',
+  o:[['Stand them upright in my rice',0,'😨','The owner rushes over. Upright chopsticks recall offerings for the dead.'],['Point them at the dish I want next',0,'😕','Pointing with chopsticks reads as rude.'],['Lay them flat on the table or the rest',1,'👍','The owner refills your banchan without being asked.']],
+  why:'Chopsticks or a spoon standing upright in rice look like offerings at ancestral rites. Lay them flat when you pause.',src:'KR'},
+ {m:'eat',sev:1,em:'🔔',place:'Fried chicken place, Itaewon',q:'You want to order more, but no staff are nearby. What do you do?',
+  o:[['Press the call button on the table, or call “Jeogiyo!”',1,'😊','A server appears in seconds. “Ne!”'],['Snap my fingers at a server',0,'😠','The server pretends not to notice.'],['Wait silently for someone to check on me',0,'😴','Twenty minutes pass. Staff wait for you to call.']],
+  why:'Many Korean restaurants have a call button on the table. Pressing it, or calling “jeogiyo” (excuse me), is normal. Water is often self-service too.',src:'KR'},
+ {m:'sacred',sev:2,em:'🛕',place:'Jogyesa Temple, Seoul',q:'A ceremony is under way in the main hall.',
+  o:[['Walk in and film it for my story',0,'😠','A monk raises a hand and you’re asked to leave.'],['Watch quietly from the side, and only take photos where allowed',1,'🙏','A volunteer offers you a lotus lantern to hold.'],['Call my friend over loudly to see',0,'😣','Worshippers turn around mid-chant.']],
+  why:'Keep your voice low at temples, cover shoulders and knees, and don’t photograph inside halls unless signs say you may.',src:'KR'},
+ {m:'sacred',sev:3,check:1,em:'🏘️',place:'Bukchon Hanok Village, 8 pm',q:'You want night photos of the hanok alleys. What do you do?',
+  o:[['Come back in the daytime and keep my voice down',1,'🤫','A resident watering her plants smiles as you pass quietly.'],['Shoot now, with my phone light and my group',0,'😠','A resident opens a window and asks you to leave.'],['Sit on a doorstep to edit my photos',0,'😤','That doorstep belongs to someone’s home.']],
+  why:'Bukchon is a living neighbourhood. Parts of it now restrict tourist visits in the evening, and residents ask for quiet. Visit by day and never sit on doorsteps.',src:'KR'},
+ {m:'stay',sev:2,em:'👟',place:'Your hanok guesthouse',q:'There is a raised wooden floor and a shoe rack at the entrance.',
+  o:[['Step up with my shoes on, they’re clean',0,'😲','The host points at the shoe rack, alarmed.'],['Take my shoes off and leave them on the rack',1,'😊','“어서 오세요!” The host shows you to the warm ondol floor.'],['Take them off and carry them to my room',0,'🤭','The host laughs. Shoes stay at the entrance.']],
+  why:'A raised floor and a shoe rack mean shoes come off. This applies in homes, hanok stays, temples and floor-seated restaurants.',src:'KR'},
+ {m:'stay',sev:2,em:'♨️',place:'Jjimjilbang spa, Busan',q:'You are heading into the hot pools at a Korean bathhouse.',
+  o:[['Wear my swimsuit into the pools',0,'🙅','An attendant points you back to the showers.'],['Shower thoroughly, then get in without a swimsuit',1,'😊','An ajumma nods and later offers you a baked egg.'],['Jump straight in after the sauna',0,'😧','Bathers frown. Everyone washes first.']],
+  why:'The bathing areas are single-sex and swimwear-free, and you shower before getting in. In the shared sauna areas you wear the clothes the spa gives you.',src:'KR'},
+ {m:'shop',sev:1,em:'💳',place:'Convenience store, Myeong-dong',q:'The cashier hands you your change and receipt.',
+  o:[['Grab it with one hand while checking my phone',0,'😐','The cashier looks a little put out.'],['Take it with both hands, or right hand with left on my wrist',1,'😊','The cashier smiles. “감사합니다!”'],['Wait for them to put it on the counter',0,'🤷','It works, but you’ve missed an easy chance to show respect.']],
+  why:'Giving and receiving with two hands, or with the left hand supporting the right, shows respect. It matters most with older people.',src:'KR'},
+ {m:'emerg',sev:3,check:1,em:'🚑',place:'Hiking trail, Bukhansan',q:'Your friend slips and badly hurts an ankle. Which number do you call for an ambulance?',
+  o:[['112',0,'😟','That’s the police. They’ll help, but you’ve lost time.'],['119',1,'😮‍💨','Rescue is on the way.'],['911',0,'😰','No answer. 911 doesn’t work in Korea.']],
+  why:'In Korea call 119 for an ambulance or fire and 112 for the police. 1330 can interpret if you get stuck.',src:'KR'}
+]};
+const BYID = {};
+Object.keys(QUEST).forEach(d => QUEST[d].forEach((q, i) => { q.id = d + i; BYID[q.id] = q; }));
+
+/* Phrase pack by locality. tone: polite = safe with staff, casual = friends, local = regional dialect. */
+const REGIONS = {
+Tokyo:[
+ {name:'Everywhere', sub:'Standard Japanese', blurb:'Every phrase in a polite version for staff and a casual one for friends.', p:[]},
+ {name:'Tokyo · Kanto', sub:'Tokyo slang', blurb:'Fast and trendy, close to standard Japanese.', p:[
+   ['That’s amazing','やばい！','Yabai!','Amazing! (or awful). Context decides','casual'],
+   ['Seriously?','マジで？','Maji de?','Seriously?','casual'],
+   ['That’s hilarious','ウケる','Ukeru','That’s so funny','casual'],
+   ['Nice, right?','いいじゃん','Ii jan','Nice, isn’t it? The “-jan” ending started in Yokohama','local']]},
+ {name:'Osaka · Kansai', sub:'Kansai-ben', blurb:'Warm, loud and famous for comedy.', p:[
+   ['Thank you','おおきに','Ōkini','Thank you','local'],
+   ['So tasty','めっちゃうまい','Meccha umai','Really tasty. “Meccha” means very','local'],
+   ['Really?','ほんま？','Honma?','Really?','local'],
+   ['No good','あかん','Akan','No good, don’t','local'],
+   ['Why on earth?!','なんでやねん！','Nande ya nen!','The classic Osaka comedy comeback','casual']]},
+ {name:'Kyoto', sub:'Kyō-kotoba', blurb:'Soft, elegant and famously indirect.', tip:'If a Kyoto host offers you bubuzuke (rice with tea), the old joke says it’s a polite hint to leave.', p:[
+   ['Welcome','おいでやす','Oideyasu','Welcome. You’ll hear it in old shops','local'],
+   ['Thank you','おおきに','Ōkini','Thank you','local'],
+   ['Elegant','はんなり','Hannari','Gracefully refined','local'],
+   ['That’s right','そうどす','Sō dosu','That’s so. “-dosu” is old Kyoto for “is”','local']]},
+ {name:'Hiroshima', sub:'Hiroshima-ben', blurb:'Strong, friendly and full of character.', p:[
+   ['So, because','じゃけえ','Jakē','So, because','local'],
+   ['Super tasty','ぶちうまい','Buchi umai','Super tasty. “Buchi” means very','local'],
+   ['What a hassle','たいぎい','Taigii','What a hassle','local']]},
+ {name:'Fukuoka · Hakata', sub:'Hakata-ben', blurb:'Often voted Japan’s cutest dialect.', p:[
+   ['Really tasty','ばりうまか','Bari umaka','Really tasty. “Bari” means very','local'],
+   ['Good, fine','よか','Yoka','Good, that’s fine','local'],
+   ['What are you doing?','なんしよーと？','Nanshiyōto?','What are you doing?','local'],
+   ['I like you','すいとーよ','Suitōyo','Save this one for someone special','casual']]},
+ {name:'Hokkaido', sub:'Hokkaido-ben', blurb:'Relaxed northern speech for snowy days.', p:[
+   ['So cold','なまらしばれる','Namara shibareru','Freezing cold. “Namara” means very','local'],
+   ['Throw out the rubbish','ゴミなげて','Gomi nagete','Here “nageru” means discard, not throw!','local']]},
+ {name:'Okinawa', sub:'Uchinaaguchi', blurb:'Island words from the Ryukyuan languages.', p:[
+   ['Welcome','めんそーれ','Mensōre','Welcome to Okinawa','local'],
+   ['Hello','はいさい','Haisai','Hello. Women often say “haitai”','local'],
+   ['Thank you','にふぇーでーびる','Nifēdēbiru','Thank you','local'],
+   ['It’ll be OK','なんくるないさ','Nankurunaisa','It’ll work out, don’t worry','local']]}
+],
+Seoul:[
+ {name:'Everywhere', sub:'Standard Korean', blurb:'Every phrase in a polite version for staff and a casual one for friends.', p:[]},
+ {name:'Seoul', sub:'Seoul slang', blurb:'Standard Korean plus fast-moving youth slang.', p:[
+   ['Awesome!','대박!','Daebak!','Awesome! Huge!','casual'],
+   ['No way','헐','Heol','OMG, no way','casual'],
+   ['The best','짱','Jjang','The best','casual'],
+   ['Really?','진짜?','Jinjja?','Really? Fine with friends','casual'],
+   ['Iced americano, please','아아 주세요','A-a juseyo','Seoul runs on “a-a”, short for iced americano','casual']]},
+ {name:'Busan · Gyeongsang', sub:'Gyeongsang satoori', blurb:'Punchy and direct, from Busan to Daegu.', p:[
+   ['Have you eaten?','밥 뭇나?','Bap mutna?','Have you eaten? A friendly hello','local'],
+   ['What are you saying?','머라카노','Meorakano?','What are you on about?','local'],
+   ['Be careful','단디 해라','Dandi haera','Do it properly, be careful','local'],
+   ['Really?','맞나?','Manna?','Really? Is that so?','local']]},
+ {name:'Jeolla · Jeonju & Gwangju', sub:'Jeolla satoori', blurb:'Warm and expressive, from Korea’s food capital.', p:[
+   ['Whatchamacallit','거시기','Geosigi','Can mean almost anything','local'],
+   ['A whole lot','허벌나게','Heobeolnage','Very, a whole lot','local'],
+   ['Really delicious','겁나 맛있어','Geomna masisseo','Really delicious','local']]},
+ {name:'Jeju', sub:'Jeju language', blurb:'So distinct that UNESCO lists it as critically endangered.', p:[
+   ['Welcome','혼저 옵서예','Honjeo opseoye','Welcome. You’ll see it at the airport','local'],
+   ['Thank you','고맙수다','Gomapsuda','Thank you','local'],
+   ['A lot','하영','Hayeong','A lot, plenty','local'],
+   ['Why?','무사?','Musa?','Why?','local']]},
+ {name:'Chungcheong · Daejeon', sub:'Chungcheong satoori', blurb:'Famously slow and laid-back.', p:[
+   ['Okay, sure','그래유','Geuraeyu','Okay, sure','local'],
+   ['It’s fine','괜찮아유','Gwaenchanayu','It’s fine, no worries','local']]}
+]};
+/* Standard phrases: polite (staff) and casual (friends) versions, free for everyone. */
+const PHRASES = {
+  Tokyo:[
+    {sit:'Ask for the bill', en:'The bill, please', polite:['お会計お願いします','Okaikei onegaishimasu'], casual:['お会計して','Okaikei shite']},
+    {sit:'Where is the platform?', en:'Where is platform 3?', polite:['3番線はどこですか？','San-bansen wa doko desu ka?'], casual:['3番線どこ？','San-bansen doko?']},
+    {sit:'Is this seat free?', en:'Is this seat free?', polite:['この席、空いていますか？','Kono seki, aite imasu ka?'], casual:['ここ空いてる？','Koko aiteru?']},
+    {sit:'May I take a photo?', en:'May I take a photo?', polite:['写真を撮ってもいいですか？','Shashin o totte mo ii desu ka?'], casual:['写真撮っていい？','Shashin totte ii?']},
+    {sit:'Where is a bin?', en:'Where is a rubbish bin?', polite:['ゴミ箱はどこですか？','Gomibako wa doko desu ka?'], casual:['ゴミ箱どこ？','Gomibako doko?']},
+    {sit:'I have an allergy', en:'I’m allergic to shrimp', polite:['えびのアレルギーがあります','Ebi no arerugī ga arimasu'], casual:['えびダメなんだ','Ebi dame nanda']}],
+  Seoul:[
+    {sit:'Ask for the bill', en:'The bill, please', polite:['계산해 주세요','Gyesanhae juseyo'], casual:['계산해 줘','Gyesanhae jwo']},
+    {sit:'Where is the subway?', en:'Where is the subway station?', polite:['지하철역이 어디예요?','Jihacheol-yeogi eodiyeyo?'], casual:['지하철역 어디야?','Jihacheol-yeok eodiya?']},
+    {sit:'Is this seat free?', en:'Is anyone sitting here?', polite:['여기 자리 있어요?','Yeogi jari isseoyo?'], casual:['여기 자리 있어?','Yeogi jari isseo?']},
+    {sit:'May I take a photo?', en:'May I take a photo?', polite:['사진 찍어도 돼요?','Sajin jjigeodo dwaeyo?'], casual:['사진 찍어도 돼?','Sajin jjigeodo dwae?']}]
+};
+/* Lily Video Call: a short check-in conversation. r = [native, romanisation, English, polite?, Lily's reply or a coaching tip]. */
+const CALLS = {
+  Tokyo:{title:'Check in at your ryokan', turns:[
+    {q:['いらっしゃいませ。ご予約のお名前は？','Irasshaimase. Go-yoyaku no o-namae wa?','Welcome. What name is the booking under?'], r:[
+      ['ジョーダンです。予約しています。','Jōdan desu. Yoyaku shite imasu.','I’m Jordan. I have a booking.',1,['ジョーダン様、お待ちしておりました。','Jōdan-sama, omachi shite orimashita.','Welcome, Jordan. We’ve been expecting you.']],
+      ['ジョーダン！','Jōdan!','Jordan!',0,'Just your name sounds abrupt. Add “desu” and mention your booking.']]},
+    {q:['お夕食は何時になさいますか？','O-yūshoku wa nanji ni nasaimasu ka?','What time would you like dinner?'], r:[
+      ['7時がいい。','Shichi-ji ga ii.','7’s good.',0,'That’s how you’d answer a friend. Add “de onegaishimasu” for staff.'],
+      ['7時でお願いします。','Shichi-ji de onegaishimasu.','7 o’clock, please.',1,['かしこまりました。お部屋は二階でございます。','Kashikomarimashita. O-heya wa ni-kai de gozaimasu.','Certainly. Your room is on the second floor.']]]},
+    {q:['何かご質問はございますか？','Nanika go-shitsumon wa gozaimasu ka?','Do you have any questions?'], r:[
+      ['朝ごはんは何時ですか？','Asagohan wa nanji desu ka?','What time is breakfast?',1,['朝食は七時から九時まででございます。ごゆっくりどうぞ。','Chōshoku wa shichi-ji kara ku-ji made de gozaimasu. Go-yukkuri dōzo.','Breakfast is from 7 to 9. Enjoy your stay.']],
+      ['ない。','Nai.','Nope.',0,'Too blunt. Try “daijōbu desu” (I’m fine), or ask a question.'],
+      ['温泉は何時までですか？','Onsen wa nanji made desu ka?','Until what time is the onsen open?',1,['温泉は夜十一時まででございます。ごゆっくりどうぞ。','Onsen wa yoru jūichi-ji made de gozaimasu. Go-yukkuri dōzo.','The onsen is open until 11 pm. Enjoy your stay.']]]}]},
+  Seoul:{title:'Check in at your hanok stay', turns:[
+    {q:['어서 오세요. 예약하신 성함이 어떻게 되세요?','Eoseo oseyo. Yeyakhasin seongham-i eotteoke doeseyo?','Welcome. What name is the booking under?'], r:[
+      ['조던.','Jodeon.','Jordan.',0,'Just your name sounds abrupt. Add “-ieyo” and mention your booking.'],
+      ['조던이에요. 예약했어요.','Jodeon-ieyo. Yeyakhaesseoyo.','I’m Jordan. I made a booking.',1,['조던 님, 기다리고 있었어요.','Jodeon-nim, gidarigo isseosseoyo.','Welcome, Jordan. We’ve been expecting you.']]]},
+    {q:['아침 식사는 몇 시에 하시겠어요?','Achim siksaneun myeot si-e hasigesseoyo?','What time would you like breakfast?'], r:[
+      ['여덟 시에 주세요.','Yeodeol si-e juseyo.','At eight, please.',1,['네, 알겠습니다. 방은 마당 왼쪽이에요.','Ne, algetseumnida. Bang-eun madang oenjjok-ieyo.','Certainly. Your room is on the left of the courtyard.']],
+      ['여덟 시.','Yeodeol si.','Eight.',0,'Too short for a host. Add “-e juseyo” to make it polite.']]},
+    {q:['궁금한 거 있으세요?','Gunggeumhan geo isseuseyo?','Any questions?'], r:[
+      ['없어.','Eopseo.','Nope.',0,'That’s casual speech. Use “eopseoyo” or ask a question.'],
+      ['근처에 맛집 있어요?','Geuncheo-e matjip isseoyo?','Any good restaurants nearby?',1,['골목 끝 칼국수 집이 맛있어요. 편히 쉬세요!','Golmok kkeut kalguksu jibi masisseoyo. Pyeonhi swiseyo!','The kalguksu place at the end of the alley is great. Rest well!']],
+      ['와이파이 비밀번호가 뭐예요?','Waipai bimilbeonhoga mwoyeyo?','What’s the Wi-Fi password?',1,['방에 적혀 있어요. 편히 쉬세요!','Bang-e jeokhyeo isseoyo. Pyeonhi swiseyo!','It’s written in your room. Rest well!']]]}]}
+};
+function startCall(){ const c = CALLS[S.dest]; S.call = {turn:0, wrong:null, firstTry:0, done:false, log:[{who:'lily', t:c.turns[0].q}]}; }
+function reply(i){ const C = S.call, turn = CALLS[S.dest].turns[C.turn], r = turn.r[i];
+  if(!r[3]){ C.wrong = i; C.missed = true; render(); return; }
+  if(!C.missed) C.firstTry++;
+  C.log.push({who:'you', t:[r[0], r[1], r[2]]}, {who:'lily', t:r[4]}); C.wrong = null; C.missed = false; C.turn++;
+  const next = CALLS[S.dest].turns[C.turn];
+  if(next) C.log.push({who:'lily', t:next.q}); else C.done = true;
+  say(r[0]); render(); const v = $('view'); v.scrollTop = v.scrollHeight; }
+const FREE_LOOKUPS = 5, SUPER_YEAR = 84;
+const SOS = {Tokyo:[['119','Ambulance & fire'],['110','Police'],['050-3816-2787','Visitor hotline (JNTO, 24/7)']], Seoul:[['119','Ambulance & fire'],['112','Police'],['1330','Travel hotline (KTO, 24/7)']]};
+
+/* State */
+const DAY = 86400000;
+const motionOK = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+const midnight = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const TODAY = midnight(new Date());
+const LEVELS = {beg:{name:'Beginner', note:'New to the language', base:22}, int:{name:'Intermediate', note:'I know the basics', base:45}};
+/* Restaurant lesson per level. o = [native, romanisation, correct, feedback]. */
+const LESSONS = {
+  beg:{icon:'🍱', tag:'New phrase', node:'Ordering food', q:'You’ve finished eating. Ask for the bill politely.',
+    Tokyo:[['お会計お願いします','Okaikei onegaishimasu',1,'“Onegaishimasu” softens the request. You don’t tip in Japan, and you often pay at the counter.'],['勘定！','Kanjō!',0,'Understood, but too blunt. That form is for friends.'],['ありがとう','Arigatō',0,'That means thank you. Staff will smile, but the bill won’t come.']],
+    Seoul:[['계산해 주세요','Gyesanhae juseyo',1,'“Juseyo” makes it polite. In Korea you usually pay at the counter on the way out.'],['계산해','Gyesanhae',0,'Understood, but too blunt. That form is for friends.'],['감사합니다','Gamsahamnida',0,'That means thank you. Staff will smile, but the bill won’t come.']]},
+  int:{icon:'🍣', tag:'Conversation', node:'Asking for recommendations', q:'The menu has no pictures. Ask the server politely what they recommend.',
+    Tokyo:[['おすすめは何ですか？','Osusume wa nan desu ka?',1,'“Osusume” means recommendation, and “desu ka” keeps it polite. Staff will often point to the seasonal special.'],['おすすめ、ある？','Osusume, aru?',0,'Right idea, but that’s how you’d ask a friend. Use “desu ka” with staff.'],['これは何ですか？','Kore wa nan desu ka?',0,'Polite, but that asks “what is this?”, not what they recommend.']],
+    Seoul:[['뭐가 맛있어요?','Mwoga masisseoyo?',1,'“What’s good here?” is the natural, polite way to ask. The “-yo” ending keeps it polite.'],['추천해 줘','Chucheonhae jwo',0,'Right idea, but “jwo” is for friends. Use “juseyo” or “-yo” with staff.'],['이게 뭐예요?','Ige mwoyeyo?',0,'Polite, but that asks “what is this?”, not what they recommend.']]}
+};
+const WHEEL_H = 36, MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const S = {step:'welcome', picked:false, shownScene:null, dest:'Tokyo', level:'beg', date:iso(new Date(TODAY.getTime() + 56*DAY)), lesson:null, lessonOk:false,
+  run:null, doneM:{}, checkRes:null, mistakes:{}, xp:540, hearts:5, region:0, query:'', shareImg:null,
+  pass:false, tier:'full', want:null, from:null, used:0, opened:{}, reg:{}, calls:0, call:null};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D = () => DEST[S.dest];
+const Q = () => QUEST[S.dest];
+const icon = (m, size = 26) => ic(MOMENTS[m][1] || (m === 'stay' ? D().stay : D().sacred), size);
+const lessonIcon = () => D().food[S.level];
+
+function tripDate(){ const [y,m,d] = S.date.split('-').map(Number); return y ? new Date(y, m-1, d) : null; }
+function daysLeft(){ const t = tripDate(); return t ? Math.round((t - TODAY) / DAY) : NaN; }
+function plan(){
+  const days = daysLeft(), crash = days <= 14, order = crash ? ORDER_CRASH : ORDER_FULL;
+  const weeks = Math.max(1, Math.floor(days / 7));
+  const label = i => crash ? (i < 3 ? 'Day-1 essential' : 'If you have time') : `Week ${Math.min(weeks, Math.floor(i * weeks / order.length) + 1)}`;
+  const minutes = crash ? 15 : days > 42 ? 8 : 12;
+  return {days, crash, order, label, minutes, weeks};
+}
+const langScore = () => LEVELS[S.level].base + (S.lessonOk ? 2 : 0);
+function band(s){ return s < 30 ? 'A1' : s < 60 ? 'A2' : 'B1'; }
+const checkCorrect = () => S.checkRes ? S.checkRes.filter(r => r.ok).length : 0;
+const checkTotal = () => S.checkRes ? S.checkRes.length : 5;
+const passed = () => checkCorrect() >= 4;
+function readiness(){ const m = Object.keys(S.doneM).length; return Math.round(10 + (m / 7) * 55 + (S.lessonOk ? 10 : 0) + (S.checkRes ? 25 * checkCorrect() / checkTotal() : 0)); }
+
+/* Bars remember their last width so every change animates. */
+const BARS = {};
+function bar(key, pct, color){ const from = BARS[key] ?? 0;
+  return `<div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i data-bar="${key}" data-to="${pct}" style="width:${from}%;${color?`background:${color}`:''}"></i></div>`; }
+function animateBars(){ requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.querySelectorAll('[data-bar]').forEach(el => { el.style.width = el.dataset.to + '%'; BARS[el.dataset.bar] = +el.dataset.to; }); })); }
+
+function say(text){ try{ const u = new SpeechSynthesisUtterance(text); u.lang = D().voice; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
+/* Toasts sit just above the tab bar (above the answer sheet in lessons) and clear when the screen changes. */
+function toast(msg){ const t = document.createElement('div'), sc = $('screen'), above = $('nav').offsetHeight ? $('nav') : sc.querySelector('.sheet');
+  t.className = 'toast'; t.setAttribute('role','status'); t.innerHTML = msg;
+  if(above) t.style.bottom = Math.round(sc.getBoundingClientRect().bottom - above.getBoundingClientRect().top + 10) + 'px';
+  sc.appendChild(t); setTimeout(() => t.remove(), 2400); }
+const clearToasts = () => document.querySelectorAll('.toast').forEach(t => t.remove());
+const T = k => `<span class="t ${k}">${k==='free'?'FREE':k==='pass'?'TRIP PASS':'SUPER'}</span>`;
+const callCap = () => S.tier==='lite' ? 3 : 10;
+function tab(){ return ({set:'set', go:'go'})[S.step] || (S.step==='pass' && S.from==='set' ? 'set' : 'ready'); }
+function need(feature){ S.want = feature; S.from = tab(); go('pass'); }
+function go(step){ S.step = step; render(); $('view').scrollTop = 0; }
+function sevChip(n){ return `<span class="sev s${n}"><i>${SEV[n][1]}</i>${SEV[n][0]}</span>`; }
+
+function startRun(kind, ids, title, m){
+  S.run = {kind, ids, title, m, i:0, pick:null, phase:'choose', results:[], combo:0, best:0, start:Date.now()};
+  S.hearts = 5; go('run');
+}
+function startCheck(){ startRun('check', Q().filter(q => q.check).map(q => q.id), 'Trip-ready check'); }
+function startMoment(m){ startRun('moment', Q().filter(q => q.m === m).map(q => q.id), MOMENTS[m][0], m); }
+function startMistakes(){
+  const ids = Object.keys(S.mistakes).filter(id => BYID[id] && id.startsWith(S.dest))
+    .sort((a,b) => BYID[b].sev - BYID[a].sev);
+  if(ids.length) startRun('mistakes', ids, 'Practise mistakes');
+}
+const myMistakes = () => Object.keys(S.mistakes).filter(id => id.startsWith(S.dest));
+
+const V = {
+welcome(){ return `
+  ${heroHTML()}
+  <div class="card"><p class="small">Where are you going?</p>${destCards()}</div>
+  <div class="card"><p class="small" id="dateLbl">When do you leave? Scroll to pick a date</p>
+    <div class="wheel-labels" aria-hidden="true"><span>Day</span><span>Month</span><span>Year</span></div>
+    <div class="wheel" role="group" aria-labelledby="dateLbl">
+      ${wheelCol('d', 'Day', Array.from({length:31}, (_,i) => String(i+1)))}
+      ${wheelCol('m', 'Month', MONTHS)}
+      ${wheelCol('y', 'Year', Array.from({length: Math.max(1, 2029 - TODAY.getFullYear() + 1)}, (_,i) => String(TODAY.getFullYear()+i)))}
+    </div>
+    <p class="small" id="planLine" style="margin-top:10px">${planLine()}</p></div>
+  <div class="card"><p class="small">Your ${D().lang} level</p><div class="lvl">
+    ${Object.keys(LEVELS).map(k => `<button type="button" class="pill" aria-pressed="${S.level===k}" data-act="level" data-v="${k}">${LEVELS[k].name}<small>${LEVELS[k].note}</small></button>`).join('')}</div></div>
+  <button type="button" class="btn${S.picked ? ' themed' : ''}" id="startBtn" data-act="go" data-v="home" ${S.picked && Number.isFinite(daysLeft()) && daysLeft() > 0 ? '' : 'disabled'}>${S.picked ? 'Build my plan' : 'Pick a destination first'}</button>
+  <p class="small" style="text-align:center">${T('free')} Countdown, personalised plan, Culture Quest and trip-ready badge</p>`; },
+
+home(){ const P = plan(), next = P.order.find(m => !S.doneM[m]);
+  const offs = [0,-52,-72,-52,0,52,72,52,0];
+  const stops = [
+    {html:`<button type="button" class="node ${S.lessonOk?'done':'now'}" aria-label="${LESSONS[S.level].node} lesson" data-act="go" data-v="lesson">${S.lessonOk?ic('check',28):ic(lessonIcon(),26)}</button>`, lbl:`${LESSONS[S.level].node}${S.lessonOk?'':'<em>Language lesson</em>'}`, start:!S.lessonOk},
+    ...P.order.map((m,i) => ({html:`<button type="button" class="node ${S.doneM[m]?'done':(S.lessonOk && m===next?'now':'')}" aria-label="${MOMENTS[m][0]}" data-act="moment" data-v="${m}">${S.doneM[m]?ic('check',28):icon(m)}</button>`, lbl:`${MOMENTS[m][0]}<em>${P.label(i)}</em>`, start:S.lessonOk && m===next})),
+    {html:`<button type="button" class="node trophy ${S.checkRes?'done':''}" aria-label="Trip-ready check" data-act="check">${S.checkRes?ic('medal',32):(TH() ? `<span class="emb">${TH().trophy}</span>` : ic('trophy',32))}</button>`, lbl:'Trip-ready check<em>5 situations · 60 seconds</em>'}];
+  return `
+  <div class="unit"><span class="pat" aria-hidden="true"></span><div class="utx"><small>Unit 1 · ${P.crash ? 'Crash plan' : `${P.weeks}-week plan`}</small><b>Get ready for ${D().country}</b></div><span class="book">${TH() ? TH().bannerArt : ic('book-open',26)}</span></div>
+  <div class="card"><div class="count"><b>${P.days}</b><span style="font-weight:900;font-size:19px">days to ${S.dest}</span></div>
+    <p class="small" style="margin:6px 0 8px">Trip-ready ${readiness()}% · ${P.minutes} minutes a day keeps you on plan</p>${bar('ready', readiness())}</div>
+  ${S.checkRes ? '' : `<button type="button" class="btn ${TH() ? 'themed2' : 'purple'}" data-act="check">Take the 60-second trip-ready check</button>`}
+  ${duoSay(P.crash ? `Only ${P.days} days! I’ve put the Day-1 essentials first.` : `Plenty of time. One unit a week and you’ll land ready.`, 'happy', 52, curOutfit())}
+  <div class="pathwrap"><div class="path">${stops.map((s,i) => { const o = offs[i % offs.length], dz = TH() && i % 2 === 1 ? TH().deco[((i - 1) / 2) % TH().deco.length] : null;
+    return `<div class="stop" style="transform:translateX(${o}px)">${s.start?'<span class="startflag">START</span>':''}${s.html}<span class="lbl">${s.lbl}</span>${dz ? `<span class="deco ${o <= 0 ? 'r' : 'l'}" aria-hidden="true">${dz.svg}</span>` : ''}</div>`; }).join('')}</div></div>
+  ${myMistakes().length ? `<button type="button" class="btn ghost" data-act="mistakes">Practise my mistakes · ${myMistakes().length}</button>` : ''}
+  <p class="small">Path, Culture Quest and badge ${T('free')} · extras below</p>
+  <div class="feats">
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'go':'need'}" data-v="${S.pass?'rehearse':'Video Call rehearsals with Lily'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('phone-call')}</span>Rehearse with Lily${T('pass')}</button>
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'dialects':'need'}" data-v="${S.pass?'':'Regional dialects and slang'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('languages')}</span>Regional dialects${T('pass')}</button>
+    <button type="button" class="feat" data-act="go" data-v="group"><span class="ic">${ic('users')}</span>Trip Group${T('free')}</button>
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'toast':'need'}" data-v="${S.pass?'Whole plan downloaded for offline use':'Your whole plan offline'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('download')}</span>Plan offline${T('pass')}</button>
+  </div>`; },
+
+rehearse(){ if(!S.call) startCall(); const C = S.call, c = CALLS[S.dest], turn = c.turns[C.turn], left = callCap() - S.calls;
+  const bub = e => `<div class="msg from-${e.who}">${e.who==='lily' ? '<span class="lav">L</span>' : ''}<div class="mb"><span class="cjk">${e.t[0]}</span><span class="rom">${e.t[1]}</span><span class="en">${e.t[2]}</span></div></div>`;
+  return `<p class="small">${T('pass')} Video Call rehearsal · ${left} of ${callCap()} calls left on your pass</p>
+  <div class="callhead"><span class="lily">L</span><div style="min-width:0"><b>Lily</b><span class="small">${c.title} · ${C.done ? 'call complete' : `reply ${C.turn+1} of ${c.turns.length}`}</span></div><div class="wave" aria-hidden="true">${[10,18,26,14,22,30,12,20].map(h=>`<i style="height:${h}px"></i>`).join('')}</div></div>
+  <div class="chat">${C.log.map(bub).join('')}</div>
+  ${C.done ? `<div class="fb ok">Call complete!<p>${C.firstTry} of ${c.turns.length} replies polite on the first try. Lily will call again with a new situation tomorrow.</p></div>
+    <button type="button" class="btn" data-act="endCall">End call</button>` : `
+  <p class="small">Your reply. Tap one, or tap the mic and say it.</p>
+  ${turn.r.map((r,i) => `<button type="button" class="opt ${C.wrong===i?'no':''}" ${C.wrong===i?'disabled':''} data-act="reply" data-v="${i}"><span class="cjk" style="font-size:17px">${r[0]}</span><br><span class="rom">${r[1]}</span><br><span class="small">${r[2]}</span></button>`).join('')}
+  ${C.wrong!==null ? `<div class="fb no">Lily smiles and waits.<p>${turn.r[C.wrong][4]}</p></div>` : ''}
+  <button type="button" class="mic" id="mic" aria-label="Tap the mic and say your reply" data-act="listen">${ic('mic',36)}</button>
+  <p class="small" style="text-align:center">Speech is simulated in this demo</p>`}
+  ${C.done ? '' : `<button type="button" class="btn ghost" data-act="endCall">Hang up</button>`}`; },
+
+pass(){ const TIERS = [['lite','Trip Pass Lite','Your whole plan offline, regional dialects, ask a local host, 3 rehearsal calls with Lily','$14.99'],
+                       ['full','Trip Pass','Everything in Lite, with 10 rehearsal calls instead of 3','$24.99'],
+                       ['two','Pass for two','Everything in Trip Pass for you and a travel partner','$34.99']];
+  return `<p class="small">${S.want?`${ic('lock',14)} Unlock with the Trip Pass: <b>${esc(S.want)}</b>`:'One payment for one trip. No subscription.'}</p><h2>Get the Trip Pass</h2>
+  ${TIERS.map(t => `<button type="button" class="card tier" aria-pressed="${S.tier===t[0]}" data-act="tier" data-v="${t[0]}"><span style="min-width:0"><b style="font-size:16px">${t[1]}</b><br><span class="small">${t[2]}</span></span><span class="price">${t[3]}</span></button>`).join('')}
+  <p class="small">One payment, no subscription. Already on Super? The Trip Pass is included. After the trip, your pass price counts toward a year of Super.</p>
+  <button type="button" class="btn purple" data-act="buy">Continue (demo)</button>
+  <button type="button" class="btn ghost" data-act="go" data-v="${S.from==='set'?'set':'home'}">Not now</button>`; },
+
+lesson(){ const L = S.lesson, LS = LESSONS[S.level], opts = LS[S.dest], inter = S.level==='int';
+  const pct = L===null ? 10 : 100;
+  return `
+  <div class="lhead"><button type="button" class="xbtn" aria-label="Close lesson" data-act="go" data-v="home">×</button>${bar('lesson', pct)}</div>
+  <div class="row" style="justify-content:space-between"><span class="tagline">${ic(lessonIcon(),18)} ${LS.tag}</span><span class="small">${LEVELS[S.level].name}</span></div>
+  <h2>${LS.q}</h2>
+  <div class="row"><button type="button" class="play" aria-label="Play the polite phrase" data-act="say" data-v="${esc(opts[0][0])}">${ic('volume-2')}</button><span class="small">${inter ? 'Script only. Romanisation appears after you answer' : 'Tap to hear the polite version'}</span></div>
+  ${opts.map((o,i) => `<button type="button" class="opt ${L===null?'':(o[2]?'ok':(L===i?'no':'dim'))}" ${L!==null?'disabled':''} data-act="lesson" data-v="${i}"><span class="cjk" style="font-size:18px">${o[0]}</span>${!inter || L!==null ? `<br><span class="rom">${o[1]}</span>` : ''}</button>`).join('')}
+  ${L===null?'':`<div class="sheet ${opts[L][2]?'ok':'no'}"><h3>${opts[L][2]?'✓ Polite and natural!':'✗ Not quite'}</h3>
+    <p style="margin:0;font-weight:700;line-height:1.4">${opts[L][3]}</p>
+    <button type="button" class="btn ${opts[L][2]?'':'red'}" data-act="lessonDone">Continue</button></div>`}`; },
+
+run(){ const R = S.run, q = BYID[R.ids[R.i]], p = R.pick;
+  const pct = Math.round((R.i + (R.phase==='reveal'?1:0)) / R.ids.length * 100);
+  const res = R.phase==='reveal' ? R.results[R.results.length-1] : null, chosen = p===null ? null : q.o[p];
+  const cls = i => R.phase==='reveal' ? (q.o[i][1] ? 'ok' : (p===i ? 'no' : 'dim')) : '';
+  return `
+  <div class="lhead"><button type="button" class="xbtn" aria-label="Quit" data-act="quit">×</button>${bar('run', pct, 'var(--green)')}<span class="chip heart">${ic('heart',20,'fill')} ${S.hearts}</span></div>
+  <div class="row" style="justify-content:space-between"><span class="tagline">${icon(q.m,18)} ${MOMENTS[q.m][0]}</span><span class="small">${R.i+1} of ${R.ids.length}${R.combo>=2?` · <span class="flame">${ic('flame',14,'fill')}</span> ${R.combo} in a row`:''}</span></div>
+  ${R.i===0 && R.phase==='choose' ? `<p class="small">Guess first. Trying before you’re taught helps it stick.</p>` : ''}
+  <div class="scene"><span class="em">${sceneIc(q)}</span><div style="min-width:0"><span class="place">${q.place}</span><h2 style="font-size:19px;margin-top:4px">${q.q}</h2></div></div>
+  ${q.o.map((o,i) => `<button type="button" class="opt ${cls(i)}" ${R.phase==='reveal'?'disabled':''} data-act="pick" data-v="${i}">${o[0]}</button>`).join('')}
+  ${R.phase==='reveal' ? `
+  <div class="reaction ${res.ok?'ok':'no'}"><span class="face s${res.ok?0:q.sev}">${chosen[2]}</span><div style="min-width:0"><b>How locals react</b><p>${chosen[3]}</p></div></div>
+  <div class="why"><b>Why it matters</b><p>${q.why}</p><span class="src">${SRC[q.src]}</span></div>
+  <div class="sheet ${res.ok?'ok':'no'}">
+    <h3>${res.ok ? '✓ Nicely done!' : `✗ Not quite ${sevChip(q.sev)}`}</h3>
+    ${res.ok ? `<p class="row avoided">You avoided a ${sevChip(q.sev)}</p>` : ''}
+    ${!res.ok && q.sev===3 ? `<p class="small" style="color:var(--red)">This is a serious slip, so Duo will bring it back first in your review.</p>` : ''}
+    <button type="button" class="btn ${res.ok?'':'red'}" data-act="next">${R.i===R.ids.length-1?'Finish':'Continue'}</button></div>` : ''}`; },
+
+done(){ const R = S.run, ok = R.results.filter(r => r.ok).length, n = R.results.length;
+  const secs = Math.round((R.end - R.start)/1000), time = `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+  const wrong = R.results.filter(r => !r.ok).sort((a,b) => BYID[b.id].sev - BYID[a.id].sev);
+  return `
+  <div style="display:flex;justify-content:center">${duo(ok===n?'cheer':'happy', 110, 'duo-bob')}</div>
+  <h2 style="text-align:center;color:var(--gold-ink);font-size:26px">${R.kind==='check'?'Check complete!':'Lesson complete!'}</h2>
+  <div class="tiles"><div class="tile t1"><small>Total XP</small><b>${ic('zap',18,'fill')}${R.xp}</b></div><div class="tile t2"><small>${ok===n?'Amazing':'Accuracy'}</small><b>${ic('target',18)}${Math.round(ok/n*100)}%</b></div><div class="tile t3"><small>Time</small><b>${ic('timer',18)}${time}</b></div></div>
+  ${wrong.length ? `<div class="card"><b>Review before you fly</b><p class="small" style="margin-top:2px">Most serious first</p><div class="mlist">${wrong.map(r => `<div class="mitem"><span class="row" style="gap:8px">${sceneIc(BYID[r.id],18)} ${BYID[r.id].place}</span>${sevChip(BYID[r.id].sev)}</div>`).join('')}</div></div>` : `<div class="card"><b>Perfect run.</b><p class="small" style="margin-top:4px">Best streak: ${R.best} in a row.</p></div>`}
+  ${R.kind==='check' ? `<button type="button" class="btn" data-act="go" data-v="badge">See my badge</button>` : `<button type="button" class="btn" data-act="go" data-v="home">Continue</button>`}
+  ${wrong.length ? `<button type="button" class="btn ghost" data-act="mistakes">Practise these now</button>` : ''}`; },
+
+badge(){ const c = checkCorrect(), t = checkTotal(), s = langScore(), b = band(s);
+  return `
+  <div class="badge">
+    <span class="halo">${duo(passed()?'cheer':'happy', 84)}</span>
+    <b>${passed() ? `${D().country}-ready!` : 'Almost ready'}</b>
+    <span style="font-weight:800">${D().flag} ${S.dest} · Culture Quest</span>
+    <div class="scorebox"><div><strong>${c}/${t}</strong><span>Etiquette</span></div><div><strong>${s}</strong><span>Duolingo Score</span></div><div><strong>${b}</strong><span>Level estimate</span></div></div>
+  </div>
+  <p class="small">Your ${D().lang} Duolingo Score is ${s}, an estimated ${b} level. Etiquette is scored separately, so your manners and your language each show their own progress.</p>
+  <button type="button" class="btn" data-act="share">Share my badge</button>
+  ${passed() ? '' : `<button type="button" class="btn ghost" data-act="check">Retake the check</button>`}
+  <button type="button" class="btn ghost" data-act="go" data-v="home">Back to my plan</button>`; },
+
+share(){ const text = shareText(), u = encodeURIComponent(PUBLIC_URL), tx = encodeURIComponent(text);
+  const links = [
+    ['WhatsApp','#25D366','W',`https://wa.me/?text=${encodeURIComponent(text+' '+PUBLIC_URL)}`],
+    ['X','#14171A','X',`https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
+    ['Facebook','#1877F2','f',`https://www.facebook.com/sharer/sharer.php?u=${u}`],
+    ['LinkedIn','#0A66C2','in',`https://www.linkedin.com/sharing/share-offsite/?url=${u}`],
+    ['LINE','#06C755','L',`https://social-plugins.line.me/lineit/share?url=${u}`],
+    ['Telegram','#229ED9','T',`https://t.me/share/url?url=${u}&text=${tx}`]];
+  return `
+  <h2>Share your badge</h2><p class="sub">Show friends you’re ready for ${D().country}.</p>
+  <div class="share" style="display:flex;flex-direction:column;gap:12px">
+    ${S.shareImg ? `<img src="${S.shareImg}" alt="Trip-ready badge. ${esc(text)}">` : '<div class="card"><p class="small">Drawing your badge…</p></div>'}
+    <div class="socials">${links.map(l => `<a class="soc" href="${l[3]}" target="_blank" rel="noopener"><i style="background:${l[1]}">${l[2]}</i>${l[0]}</a>`).join('')}</div>
+    <p class="small">Post your badge to your Instagram or TikTok story, or send it straight to friends.</p>
+    <label class="small" for="shareText">Message to send a friend</label>
+    <textarea class="copybox" id="shareText" rows="4" readonly>${esc(text+' '+PUBLIC_URL)}</textarea>
+    <button type="button" class="btn ghost" data-act="copy">Copy message</button>
+    <button type="button" class="btn ghost" data-act="go" data-v="badge">Back to my badge</button>
+  </div>`; },
+
+group(){ const tk = S.dest==='Tokyo'; return `
+  <p class="small">${T('free')} Trip Group · 18+ · moderated</p>
+  <h2>${S.dest} · ${tripDate().toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</h2><p class="sub">Travellers going the same month and verified local hosts (example)</p>
+  <div class="card post"><span class="av" style="background:var(--blue)">J</span><div><b>Jordan</b> <span class="small">· Chicago</span>
+    <p>${tk?'Anyone doing Kyoto the week of the 18th? Looking for a ramen buddy. Also, is it rude to eat while walking in Asakusa?':'Anyone in Seoul the week of the 18th? Looking for a BBQ buddy. Also, do I really need two hands to take my change?'}</p></div></div>
+  <div class="card post"><span class="av" style="background:var(--orange)">M</span><div><b>Maya</b> <span class="small">· London</span><p>Same week! Happy to meet ${tk?'at Kyoto Station':'in Hongdae'}.</p></div></div>
+  ${S.pass
+    ? `<div class="card post"><span class="av" style="background:var(--purple)">${D().host[0]}</span><div><b>${D().host}</b><span class="host">✓ HOST · ${D().hostCity.toUpperCase()}</span>
+        <p>${tk?'For ramen near Kyoto Station, the 10th-floor ramen street opens late. Most people stop by a stall to eat rather than walking with food. Keep rubbish in a bag until you find a konbini.':'For late BBQ near Hongdae, try the side streets off Exit 9. Two hands is a nice touch with older people, and leave the pink metro seats empty.'}</p></div></div>
+       <button type="button" class="btn purple" data-act="toast" data-v="Question sent to your local hosts">Ask a local host ${T('pass')}</button>`
+    : `<div class="lockcard"><b>${ic('lock',16)} Ask a local host</b><p class="small" style="margin-top:4px">12 verified hosts answer questions and give recommendations. Posting with other travellers stays free.</p></div>
+       <button type="button" class="btn purple" data-act="need" data-v="Ask a local host">Unlock with Trip Pass</button>`}
+  <button type="button" class="btn blue" data-act="check">Practise in the trip-ready check</button>
+  <button type="button" class="btn ghost" data-act="go" data-v="home">Back to my plan</button>`; },
+
+set(){ const regs = REGIONS[S.dest], r = regs[S.region] || regs[0]; return `
+  <div class="offline"><span>${S.pass?`${ic('wifi-off',16)} Airplane mode · offline`:`${ic('wifi',16)} Online · offline needs Trip Pass`}</span><span>${S.dest==='Tokyo'?'Kyoto, day 3':'Busan, day 3'}</span></div>
+  <div class="card"><b>Emergency card</b> ${T('free')}<div class="sos">${SOS[S.dest].map(s => `<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div></div>
+  <h2>Speak like a local</h2>
+  ${S.pass ? `<div class="meter"><span>${T('pass')} Every region, works offline</span><span class="small">offline ${ic('check',14)}</span></div>`
+           : `<div class="meter"><span>${T('free')} Standard phrases, polite and casual</span><span class="small">online</span></div>`}
+  <p class="small">Choose where you are</p>
+  <div class="regions" role="group" aria-label="Choose a region">${regs.map((g,i) => `<button type="button" class="regbtn" aria-pressed="${i===S.region}" data-act="region" data-v="${i}"><b>${g.name}</b><small>${g.sub}${i>0 ? ` · ${g.p.length} phrases` : ''}</small>${i>0 && !S.pass ? `<span class="lk">${ic('lock',14)}</span>` : ''}</button>`).join('')}</div>
+  <div class="region"><b>${r.name}</b> <span class="small" style="display:inline">· ${r.sub}</span> ${S.region===0 ? T('free') : T('pass')}<p class="small" style="margin-top:4px">${r.blurb}</p>${r.tip && (S.pass || S.region===0)?`<p class="small row" style="margin-top:6px;color:var(--purple-d);align-items:flex-start;gap:6px">${ic('lightbulb',16)}<span>${r.tip}</span></p>`:''}</div>
+  ${S.region>0 && !S.pass ? `<div class="lockcard"><b>${ic('lock',16)} Regional dialects are part of the Trip Pass</b><p class="small" style="margin-top:4px">${r.p.length} ${r.sub} expressions, each tagged with when to use it.</p></div><button type="button" class="btn purple" data-act="need" data-v="Regional dialects and slang">Unlock with Trip Pass</button>` : `
+  <label class="small" for="q">Search ${r.name === 'Everywhere' ? 'phrases' : r.name}</label>
+  <input class="search" id="q" placeholder="For example: thank you, tasty, bill" value="${esc(S.query)}" autocomplete="off">
+  <div id="list">${listHTML()}</div>`}
+  <p class="small">${r.name==='Everywhere' ? 'Polite phrases are safe with staff anywhere. Culture cards are co-branded with the national tourism board.' : 'Locals love hearing their dialect from visitors. With staff, standard polite speech is always safe.'}</p>
+  ${S.pass ? `<button type="button" class="btn purple" data-act="go" data-v="group">Ask a local host for recommendations</button>` : ''}`; },
+
+go(){ return `<div class="wrapped"><p style="margin:0;font-weight:800;opacity:.9">Trip Wrapped · ${D().country} ${tripDate().getFullYear()}</p>
+    <h2 style="color:#fff">You spoke ${D().lang} in ${D().country}.</h2>
+    <div class="grid"><div><b>61</b>day streak</div><div><b>214</b>phrases learned</div><div><b>${checkCorrect()}/${checkTotal()}</b>etiquette check</div><div><b>${langScore()}</b>Duolingo Score</div></div></div>
+  ${duoSay('Your trip streak is now your Duolingo streak. Let’s keep it going!', 'cheer', 56)}
+  ${S.checkRes ? `<button type="button" class="btn ghost" data-act="share">Share my Trip Wrapped</button>` : ''}
+  <div class="card"><b>Your phrases become review units</b> ${T('free')}<p class="small" style="margin-top:4px">Everything you looked up turns into your first lessons back home.</p></div>
+  <div class="superc"><div class="row" style="justify-content:space-between"><b style="font-size:17px">Keep going with Super</b>${T('super')}</div>
+    <p style="margin:6px 0 0;font-weight:800">${S.pass ? `Your $${credit()} pass counts toward it: first year <span style="color:var(--purple)">$${(SUPER_YEAR - credit()).toFixed(0)}</span> <span class="strike">$${SUPER_YEAR}</span>` : 'Every trip included, the full course, no ads'}</p>
+    <div class="keep"><span>Offline pack and lookup history</span><span class="small">fades in 14 days</span><span>${ic('check',14)} Super</span>
+      <span>Your Trip Group and host, as alumni</span><span class="small">fades in 14 days</span><span>${ic('check',14)} Super</span>
+      <span>A Trip Pass for every future trip</span><span class="small">pass per trip</span><span>${ic('check',14)} Super</span></div>
+    <button type="button" class="btn purple" style="margin-top:10px" data-act="toast" data-v="Demo only: no payment taken">Start Super</button></div>
+  <button type="button" class="btn" data-act="nextTrip">Plan my next trip ${S.dest==='Tokyo'?flagSvg('kr',20):flagSvg('jp',20)}</button>`; }
+};
+
+function planLine(){ const d = daysLeft(); if(!Number.isFinite(d) || d <= 0) return 'Pick a date after today.';
+  const t = tripDate().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  return `${t} · ${d} days away · ${d <= 14 ? 'crash plan with Day-1 essentials first' : `${Math.floor(d/7)}-week plan`}`; }
+const credit = () => S.pass ? (S.tier==='lite' ? 14.99 : S.tier==='two' ? 34.99 : 24.99) : 0;
+function standardHTML(){ const q = S.query.toLowerCase();
+  const list = PHRASES[S.dest].filter(p => !q || (p.sit+p.en+p.polite[1]+p.casual[1]).toLowerCase().includes(q));
+  if(!list.length) return '<p class="small">No match. Try “bill”, “seat” or “photo”.</p>';
+  return list.map(p => { const r = S.reg[p.sit] || 'polite', v = p[r];
+    return `<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between;align-items:flex-start"><b style="min-width:0">${p.sit}</b><span class="small" style="text-align:right">${p.en}</span></div>
+    <div class="reg"><button type="button" aria-pressed="${r==='polite'}" data-act="reg" data-v="${esc(p.sit)}|polite">Polite · staff</button><button type="button" aria-pressed="${r==='casual'}" data-act="reg" data-v="${esc(p.sit)}|casual">Casual · friends</button></div>
+         <div class="row" style="margin-top:8px"><button type="button" class="play" aria-label="Play ${esc(v[1])}" data-act="say" data-v="${esc(v[0])}">▶</button><div style="min-width:0"><span class="cjk" style="font-size:19px">${v[0]}</span><br><span class="rom">${v[1]}</span></div></div></div>`; }).join(''); }
+function listHTML(){ if(S.region === 0) return standardHTML();
+  const r = REGIONS[S.dest][S.region] || REGIONS[S.dest][0], q = S.query.toLowerCase();
+  const list = r.p.filter(p => !q || (p[0]+p[2]+p[3]).toLowerCase().includes(q));
+  if(!list.length) return '<p class="small">No match offline. Try another word or region.</p>';
+  const toneLbl = {polite:'POLITE · STAFF', casual:'CASUAL · FRIENDS', local:'LOCAL DIALECT'};
+  return list.map(p => `<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between;align-items:flex-start"><b style="min-width:0">${p[0]}</b><span class="tone ${p[4]}">${toneLbl[p[4]]}</span></div>
+    <div class="row" style="margin-top:8px"><button type="button" class="play" aria-label="Play ${esc(p[2])}" data-act="say" data-v="${esc(p[1])}">▶</button><div style="min-width:0"><span class="cjk" style="font-size:20px">${p[1]}</span><br><span class="rom">${p[2]}</span></div></div>
+    <p class="small" style="margin-top:6px">${p[3]}</p></div>`).join(''); }
+function shareText(){ return passed()
+  ? `I’m ${D().country}-ready! ${checkCorrect()}/${checkTotal()} on the Duolingo Trips etiquette check, Duolingo Score ${langScore()}.`
+  : `I scored ${checkCorrect()}/${checkTotal()} on the Duolingo Trips etiquette check for ${D().country}.`; }
+
+/* Badge image for sharing (1080 x 1350, a 4:5 post). */
+async function drawBadge(){
+  try{ await document.fonts.ready; }catch(e){}
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0,0,W*.4,H); g.addColorStop(0,'#58CC02'); g.addColorStop(1,'#2F8F00'); x.fillStyle = g; x.fillRect(0,0,W,H);
+  x.fillStyle = 'rgba(255,255,255,.08)'; for(let i=0;i<6;i++){ x.beginPath(); x.arc(W*.88, H*.1, 120+i*90, 0, Math.PI*2); x.fill(); }
+  x.textAlign = 'center'; x.fillStyle = '#fff';
+  x.font = '900 60px Nunito, sans-serif'; x.fillText('duolingo trips', W/2, 120);
+  x.fillStyle = 'rgba(255,255,255,.92)'; x.beginPath(); x.arc(W/2, 318, 168, 0, Math.PI*2); x.fill(); x.fillStyle = '#fff';
+  try{ const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(duo(passed()?'cheer':'happy', 320)); await img.decode(); x.drawImage(img, W/2-160, 160, 320, 320); }catch(e){}
+  x.font = '900 100px Nunito, sans-serif'; x.fillText(passed() ? `${D().country}-ready!` : 'Almost ready', W/2, 590);
+  x.font = '800 44px Nunito, sans-serif'; x.fillText(`${S.dest}, ${D().country} · Culture Quest`, W/2, 660);
+  const b = band(langScore());
+  [[`${checkCorrect()}/${checkTotal()}`,'Etiquette'],[String(langScore()),'Duolingo Score'],[b, 'Level estimate']].forEach((cl,i) => { const cx = 90 + i*310, cy = 730;
+    x.fillStyle = 'rgba(255,255,255,.18)'; x.beginPath(); x.roundRect ? x.roundRect(cx, cy, 280, 240, 36) : x.rect(cx, cy, 280, 240); x.fill();
+    x.fillStyle = '#fff'; x.font = '900 92px Nunito, sans-serif'; x.fillText(cl[0], cx+140, cy+130);
+    x.font = '800 34px Nunito, sans-serif'; x.fillText(cl[1], cx+140, cy+195); });
+  x.font = '800 46px Nunito, sans-serif'; x.fillText(passed() ? 'Ready to travel with good manners' : 'Almost there, one more go!', W/2, 1100);
+  x.font = '700 30px Nunito, sans-serif'; x.fillStyle = 'rgba(255,255,255,.85)';
+  x.fillText('Concept prototype by SVR Consulting · not an official Duolingo product', W/2, 1280);
+  return c.toDataURL('image/png');
+}
+async function prepareShare(){ S.shareImg = await drawBadge(); if(S.step==='share') render(); }
+function copyMsg(){ const ta = $('shareText'), txt = ta.value;
+  const fallback = () => { ta.focus(); ta.select(); toast('Message selected. Copy it to share.'); };
+  try{ navigator.clipboard.writeText(txt).then(() => toast('Message copied'), fallback); }catch(e){ fallback(); } }
+
+function listen(){ const m = $('mic'); m.classList.add('listen'); m.innerHTML = '…';
+  setTimeout(() => { const i = CALLS[S.dest].turns[S.call.turn].r.findIndex(r => r[3]); reply(i); }, 1200); }
+
+function act(a, v){
+  const R = S.run;
+  switch(a){
+    case 'mode': S.pass = v==='pass'; if(S.pass) S.used = 0; render(); break;
+    case 'need': need(v); break;
+    case 'tier': S.tier = v; render(); break;
+    case 'buy': S.pass = true; S.want = null; S.used = 0; go(S.from==='set' ? 'set' : 'home'); toast('Demo only: no payment taken'); break;
+    case 'toast': toast(esc(v)); break;
+    case 'listen': listen(); break;
+    case 'endCall': S.calls = Math.min(S.calls+1, callCap()); S.call = null; go('home'); break;
+    case 'reply': reply(+v); break;
+    case 'reg': { const [sit, r] = v.split('|'); S.reg[sit] = r; $('list').innerHTML = listHTML(); break; }
+    case 'dialects': S.region = 1; S.query = ''; go('set'); break;
+    case 'dest': S.picked = true; S.dest = v; S.lesson = null; S.lessonOk = false; S.doneM = {}; S.checkRes = null; S.region = 0; S.query = ''; S.shareImg = null; S.opened = {}; S.reg = {}; S.call = null; render(); break;
+    case 'go': go(v); break;
+    case 'say': say(v); break;
+    case 'lesson': S.lesson = +v; if(S.lesson===0){ S.lessonOk = true; S.xp += 10; say(LESSONS[S.level][S.dest][0][0]); } render(); break;
+    case 'level': S.level = v; S.lesson = null; S.lessonOk = false; render(); break;
+    case 'wheelpick': { const [k, i] = v.split('|'); const col = $('wh-' + k); col.scrollTo({top: +i * WHEEL_H, behavior: motionOK() ? 'smooth' : 'auto'}); break; }
+    case 'lessonDone': S.lesson = null; go('home'); break;
+    case 'check': startCheck(); break;
+    case 'moment': startMoment(v); break;
+    case 'mistakes': startMistakes(); break;
+    case 'quit': S.run = null; go('home'); break;
+    case 'pick': { if(R.phase === 'reveal') break;
+      const q = BYID[R.ids[R.i]]; R.pick = +v; const ok = !!q.o[R.pick][1];
+      R.results.push({id:q.id, ok}); R.phase = 'reveal';
+      if(ok){ R.combo++; R.best = Math.max(R.best, R.combo); S.xp += 10; delete S.mistakes[q.id]; }
+      else { R.combo = 0; S.hearts = Math.max(0, S.hearts - 1); S.mistakes[q.id] = {sev:q.sev}; }
+      render(); $('view').scrollTop = $('view').scrollHeight;
+      if(ok && (R.combo===3 || R.combo===5)) toast(`${R.combo} in a row! Duo is proud of you.`);
+      if(S.hearts===0){ S.hearts = 5; toast('Out of hearts. Duo refilled them for this demo.'); }
+      break; }
+    case 'next': if(R.i === R.ids.length - 1){
+        R.end = Date.now(); R.xp = R.results.filter(r => r.ok).length * 10 + (R.results.every(r => r.ok) ? 5 : 0);
+        if(R.kind === 'moment') S.doneM[R.m] = true;
+        if(R.kind === 'check'){ S.checkRes = R.results.slice(); S.shareImg = null; prepareShare(); }
+        go('done');
+      } else { R.i++; R.pick = null; R.phase = 'choose'; render(); $('view').scrollTop = 0; } break;
+    case 'share': if(!S.shareImg) prepareShare(); go('share'); break;
+    case 'copy': copyMsg(); break;
+    case 'region': S.region = +v; S.query = ''; render(); break;
+    case 'nextTrip': act('dest', S.dest==='Tokyo'?'Seoul':'Tokyo'); go('welcome'); break;
+  }
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if(b && !b.disabled) act(b.dataset.act, b.dataset.v); });
+document.addEventListener('input', e => {
+  if(e.target.id==='q'){ S.query = e.target.value; $('list').innerHTML = listHTML(); }
+});
+
+/* Date roller */
+function wheelCol(k, label, items){
+  return `<div class="col" id="wh-${k}" tabindex="0" role="listbox" aria-label="${label}">${items.map((t,i) => `<div role="option" data-act="wheelpick" data-v="${k}|${i}">${t}</div>`).join('')}</div>`; }
+const daysIn = (y, m) => new Date(y, m + 1, 0).getDate();
+function wheelIndex(k){ const c = $('wh-' + k); return Math.max(0, Math.min(c.children.length - 1, Math.round(c.scrollTop / WHEEL_H))); }
+function paintWheel(){ if(!$('wh-d')) return;
+  const y = TODAY.getFullYear() + wheelIndex('y'), m = wheelIndex('m'), max = daysIn(y, m);
+  ['d','m','y'].forEach(k => { const i = wheelIndex(k); [...$('wh-' + k).children].forEach((el, j) => {
+    el.classList.toggle('on', j === i); el.setAttribute('aria-selected', String(j === i));
+    if(k === 'd') el.classList.toggle('off', j >= max); }); });
+}
+function readWheel(){ if(!$('wh-d')) return;
+  const y = TODAY.getFullYear() + wheelIndex('y'), m = wheelIndex('m'), max = daysIn(y, m);
+  let d = wheelIndex('d') + 1;
+  if(d > max){ d = max; $('wh-d').scrollTo({top: (max - 1) * WHEEL_H, behavior: motionOK() ? 'smooth' : 'auto'}); }
+  S.date = iso(new Date(y, m, d)); paintWheel();
+  $('planLine').textContent = planLine();
+  $('startBtn').disabled = !S.picked || !(Number.isFinite(daysLeft()) && daysLeft() > 0);
+}
+function initWheel(){
+  const t = tripDate(), idx = {d: t.getDate() - 1, m: t.getMonth(), y: Math.max(0, t.getFullYear() - TODAY.getFullYear())};
+  ['d','m','y'].forEach(k => { const c = $('wh-' + k); c.scrollTop = idx[k] * WHEEL_H; let timer;
+    c.addEventListener('scroll', () => { paintWheel(); clearTimeout(timer); timer = setTimeout(readWheel, 120); }, {passive:true});
+    c.addEventListener('keydown', e => { if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); c.scrollBy({top: e.key === 'ArrowDown' ? WHEEL_H : -WHEEL_H, behavior: motionOK() ? 'smooth' : 'auto'}); } });
+  });
+  paintWheel();
+}
+document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => {
+  const t = b.dataset.tab; go(t==='ready' ? (S.step==='welcome' ? 'welcome' : 'home') : t); }));
+
+let shownScreen = '';
+function render(){
+  const inLesson = ['run','lesson'].includes(S.step), screenKey = S.step + (S.step==='run' ? S.run.i : '');
+  if(screenKey !== shownScreen){ shownScreen = screenKey; clearToasts(); }
+  $('screen').classList.toggle('lessonmode', inLesson);
+  $('view').innerHTML = V[S.step]();
+  applyTheme();
+  if(S.step === 'welcome'){ initWheel(); animateHero(); }
+  $('dest').innerHTML = S.picked ? `${D().flag} ${S.dest}` : '✈️ Where to?';
+  $('streak').innerHTML = `${ic('flame',20,'fill')} ${12 + (S.checkRes?1:0)}`;
+  $('xp').innerHTML = `${ic('gem',20,'fill')} ${S.xp}`;
+  $('hearts').innerHTML = `${ic('heart',20,'fill')} ${S.hearts}`;
+  $('mFree').setAttribute('aria-pressed', String(!S.pass)); $('mPass').setAttribute('aria-pressed', String(S.pass));
+  document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-current', String(b.dataset.tab===tab())));
+  statusBar();
+  animateBars();
+}
+/* Status bar: real local time; airplane mode while the offline pack is in use in the country. */
+function clock(){ $('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}).replace(/\s?[ap]\.?m\.?/i, ''); }
+clock(); setInterval(clock, 15000);
+function statusBar(){ const airplane = S.step === 'set' && S.pass;
+  $('statusIcons').innerHTML = (airplane ? `<span class="plane" title="Airplane mode">${svgIc('plane', 17)}</span>` : svgIc('signal', 17) + svgIc('wifi', 17)) + svgIc('battery-full', 22); }
+$('navA').innerHTML = ic('calendar-days', 22); $('navB').innerHTML = ic('map-pin', 22); $('navC').innerHTML = ic('house', 22);
+$('guideMark').innerHTML = `${duo('happy', 34)} duolingo <span>trips</span>`;
+render();
+</script>
+
+<script>
+/* Offline support: cache the app shell so it opens with no signal. */
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
